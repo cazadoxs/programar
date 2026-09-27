@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FocusGuard</string>
+    <string name="app_tagline">Deja de perder el tiempo en Shorts y Reels</string>
+
+    <!-- Onboarding -->
+    <string name="onb_welcome_title">Recupera tu tiempo</string>
+    <string name="onb_welcome_body">FocusGuard bloquea Shorts, Reels y el feed de TikTok en el momento en que aparecen, sin tocar tus historias, chats ni los videos largos.</string>
+    <string name="onb_privacy_title">100% privado</string>
+    <string name="onb_privacy_body">Todo ocurre en tu teléfono. FocusGuard no tiene permiso de Internet, no envía datos a ningún servidor y no puede hacerlo.</string>
+    <string name="onb_access_title">Activa el servicio de accesibilidad</string>
+    <string name="onb_access_body">FocusGuard necesita este permiso para reconocer cuándo aparece contenido de Shorts o Reels en pantalla y cerrarlo al instante. Es el único modo de bloquear contenido dentro de otras apps sin root.</string>
+    <string name="onb_access_cta">Activar permiso</string>
+    <string name="onb_overlay_title">Permite mostrar el aviso de bloqueo</string>
+    <string name="onb_overlay_body">Con este permiso opcional, FocusGuard puede mostrarte un mensaje breve cada vez que bloquea contenido, para reforzar el hábito.</string>
+    <string name="onb_overlay_cta">Permitir superposición</string>
+    <string name="onb_notif_title">Notificaciones de resumen</string>
+    <string name="onb_notif_body">Recibe un resumen diario de cuántos Shorts y Reels evitaste. Es opcional.</string>
+    <string name="onb_finish">Empezar</string>
+    <string name="onb_skip">Más tarde</string>
+    <string name="onb_continue">Continuar</string>
+    <string name="onb_status_granted">Concedido</string>
+    <string name="onb_status_pending">Pendiente</string>
+
+    <!-- Main dashboard -->
+    <string name="dash_protection_on">Protección activa</string>
+    <string name="dash_protection_off">Protección desactivada</string>
+    <string name="dash_protection_off_sub">Toca para activar el permiso de accesibilidad</string>
+    <string name="dash_protection_on_sub">Bloqueando Shorts, Reels y TikTok</string>
+    <string name="dash_today">Hoy</string>
+    <string name="dash_blocked_today">bloqueados hoy</string>
+    <string name="dash_time_saved">tiempo estimado ahorrado</string>
+    <string name="dash_streak">racha de días activos</string>
+    <string name="dash_this_week">Esta semana</string>
+    <string name="dash_apps">Plataformas</string>
+    <string name="dash_settings">Ajustes</string>
+    <string name="dash_stats">Estadísticas</string>
+    <string name="dash_about">Acerca de</string>
+    <string name="dash_days_suffix">d</string>
+
+    <!-- Apps -->
+    <string name="app_youtube">YouTube Shorts</string>
+    <string name="app_instagram">Instagram Reels</string>
+    <string name="app_tiktok">TikTok</string>
+    <string name="app_youtube_desc">Bloquea Shorts. Los videos largos siguen disponibles.</string>
+    <string name="app_instagram_desc">Bloquea Reels. Historias, DMs y el feed normal siguen disponibles.</string>
+    <string name="app_tiktok_desc">Bloquea el feed de scroll infinito. El buzón de mensajes sigue disponible.</string>
+    <string name="app_not_installed">No instalada</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_section_platforms">Plataformas bloqueadas</string>
+    <string name="settings_section_feedback">Aviso al bloquear</string>
+    <string name="settings_overlay_toggle">Mostrar mensaje al bloquear</string>
+    <string name="settings_overlay_toggle_desc">Un aviso breve en pantalla cada vez que se bloquea contenido</string>
+    <string name="settings_section_protection">Protección contra impulsos</string>
+    <string name="settings_pin_toggle">Bloqueo con PIN para desactivar</string>
+    <string name="settings_pin_toggle_desc">Pide un PIN y una espera de 15 minutos antes de poder apagar FocusGuard</string>
+    <string name="settings_section_permissions">Permisos</string>
+    <string name="settings_permission_accessibility">Servicio de accesibilidad</string>
+    <string name="settings_permission_overlay">Mostrar sobre otras apps</string>
+    <string name="settings_permission_notifications">Notificaciones</string>
+    <string name="settings_section_data">Datos</string>
+    <string name="settings_reset_stats">Reiniciar estadísticas</string>
+    <string name="settings_reset_stats_confirm">¿Borrar todo el historial de bloqueos? Esta acción no se puede deshacer.</string>
+
+    <!-- Stats -->
+    <string name="stats_title">Estadísticas</string>
+    <string name="stats_last_7_days">Últimos 7 días</string>
+    <string name="stats_last_30_days">Últimos 30 días</string>
+    <string name="stats_total_blocked">Total bloqueados</string>
+    <string name="stats_total_time">Tiempo total ahorrado</string>
+    <string name="stats_by_platform">Por plataforma</string>
+    <string name="stats_empty">Aún no hay datos. Vuelve cuando FocusGuard haya bloqueado algo.</string>
+    <string name="stats_platform_total_format">%1$d bloqueados en total</string>
+
+    <!-- Pin -->
+    <string name="pin_setup_title">Crea un PIN</string>
+    <string name="pin_setup_body">Lo necesitarás para desactivar la protección más adelante.</string>
+    <string name="pin_confirm_title">Confirma tu PIN</string>
+    <string name="pin_enter_title">Introduce tu PIN</string>
+    <string name="pin_error_mismatch">Los PIN no coinciden</string>
+    <string name="pin_error_wrong">PIN incorrecto</string>
+    <string name="pin_wait_title">Espera activa</string>
+    <string name="pin_wait_body">Para evitar decisiones impulsivas, podrás desactivar la protección en:</string>
+    <string name="pin_wait_cta">Desactivar ahora</string>
+    <string name="pin_cancel">Cancelar</string>
+
+    <!-- About -->
+    <string name="about_title">Acerca de FocusGuard</string>
+    <string name="about_body">FocusGuard detecta patrones visuales propios del reproductor de Shorts, Reels y el feed de TikTok mediante el servicio de accesibilidad de Android, y cierra ese contenido al instante. No lee, guarda ni transmite el contenido de las apps: solo compara identificadores de pantalla con una lista interna de patrones.\n\nComo las apps de YouTube, Instagram y TikTok cambian su diseño con cada actualización, es posible que ocasionalmente el bloqueo falle hasta que se actualice FocusGuard.\n\nFocusGuard no solicita el permiso de Internet: toda la información permanece únicamente en este dispositivo.</string>
+    <string name="about_version">Versión %1$s</string>
+
+    <!-- Overlay -->
+    <string name="overlay_title">Shorts bloqueados</string>
+    <string name="overlay_message_default">Ibas a perder el tiempo. Vuelve a lo importante.</string>
+
+    <!-- Notification -->
+    <string name="notif_channel_name">Resumen diario</string>
+    <string name="notif_daily_title">Resumen de FocusGuard</string>
+    <string name="notif_daily_body">Bloqueaste %1$d Shorts/Reels hoy. ¡Sigue así!</string>
+
+    <string name="accessibility_service_description">Detecta cuándo aparecen Shorts, Reels o el feed de TikTok en pantalla para cerrarlos automáticamente. No lee ni almacena el contenido de las apps.</string>
+    <string name="permission_grant">Conceder</string>
+    <string name="permission_granted">Activo</string>
+    <string name="back">Atrás</string>
+</resources>
