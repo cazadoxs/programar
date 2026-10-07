@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  packageNames is narrowed at runtime (FocoAccessibilityService.applyPackageFilter)
+  to the apps that can be blocked, so the system does not deliver events from
+  any other app. Key-event filtering powers the double-press capture gesture.
+-->
+<accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
+    android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
+    android:accessibilityFeedbackType="feedbackGeneric"
+    android:accessibilityFlags="flagRetrieveInteractiveWindows|flagReportViewIds|flagRequestFilterKeyEvents"
+    android:canRetrieveWindowContent="true"
+    android:canRequestFilterKeyEvents="true"
+    android:notificationTimeout="120"
+    android:isAccessibilityTool="false"
+    android:description="@string/foco_accessibility_description" />
