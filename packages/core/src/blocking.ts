@@ -33,6 +33,8 @@ export interface FocusSession {
   endsAt: string;
   /** Set when the user stops the session early. */
   endedAt?: string;
+  /** When the user asked to stop; the stop is allowed after the friction delay. */
+  stopRequestedAt?: string;
   targets: BlockTarget[];
   strict: boolean;
   pomodoro?: PomodoroConfig;
