@@ -115,7 +115,7 @@ export default function CalendarScreen() {
         {Platform.OS !== "web" && (
           <>
             <Body muted>
-              Calendarios del móvil: Samsung, Xiaomi, {Platform.OS === "ios" ? "iCloud, " : ""}y cualquier cuenta añadida al teléfono.
+              Calendarios del móvil: Samsung, Xiaomi y cualquier cuenta añadida al teléfono.
             </Body>
             <Button
               disabled={busy}

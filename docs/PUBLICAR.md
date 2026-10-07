@@ -6,29 +6,13 @@ Lo demás ya está preparado en el repositorio.
 ## 1. Cuentas (en este orden)
 
 1. **Expo** (gratis) — expo.dev. Sirve para compilar en la nube sin Android
-   Studio ni Xcode. Luego: `cd apps/mobile && npx eas-cli@latest login && npx eas-cli@latest init`.
+   Studio. Luego: `cd apps/mobile && npx eas-cli@latest login && npx eas-cli@latest init`.
 2. **Google Play Console** (25 $, pago único) — play.google.com/console.
-3. **Apple Developer Program** (99 $/año) — developer.apple.com/programs.
-   Hace falta para iPhone y Mac.
-4. **Hosting del servidor** con Postgres — por ejemplo Railway o Fly.io +
+3. **Hosting del servidor** con Postgres — por ejemplo Railway o Fly.io +
    Neon. Variables: `DATABASE_URL`, `JWT_SECRET`, `ENCRYPTION_KEY`
    (`openssl rand -base64 32`), `PUBLIC_URL`.
 
-## 2. Pedir ya el permiso de Apple para bloquear apps
-
-Sin él no se puede publicar el bloqueo en iPhone y Apple puede tardar.
-Formulario: developer.apple.com/contact/request/family-controls-distribution
-
-Texto propuesto (en inglés, como lo piden):
-
-> Foco is a personal productivity and digital-wellbeing app. Users choose the
-> apps that distract them (e.g. social networks) and Foco shields them during
-> study/work sessions, Pomodoro timers and schedules the user sets for
-> themselves. We use FamilyControls with `.individual` authorization (the user
-> manages their own device), ManagedSettings to apply shields and
-> DeviceActivity for schedules. No data about app usage leaves the device.
-
-## 3. Google Play: declaración de Accesibilidad
+## 2. Google Play: declaración de Accesibilidad
 
 El bloqueo granular (Reels, Historias…) usa el servicio de accesibilidad.
 Play lo permite si se declara bien:
@@ -42,7 +26,7 @@ Play lo permite si se declara bien:
 - Rellenar "Seguridad de los datos": cuenta (email), contenido creado por el
   usuario (tareas/eventos), nada de uso de apps sale del dispositivo.
 
-## 4. Conectar Google Calendar y Outlook (opcional para el lanzamiento)
+## 3. Conectar Google Calendar y Outlook (opcional para el lanzamiento)
 
 **Google**: console.cloud.google.com → nuevo proyecto → habilitar *Google
 Calendar API* → Pantalla de consentimiento OAuth (externa) → Credenciales →
@@ -58,24 +42,22 @@ registro (cuentas personales y de organización) → URI de redirección web
 secretos → nuevo secreto. Copiar a `MICROSOFT_CLIENT_ID` /
 `MICROSOFT_CLIENT_SECRET`.
 
-Samsung, Xiaomi e iCloud no necesitan nada: se leen desde el calendario del
-propio móvil (botón "Importar calendarios del móvil").
+Samsung y Xiaomi no necesitan nada: se leen desde el calendario del propio
+móvil (botón "Importar calendarios del móvil"). iCloud se añade con su enlace
+`.ics`.
 
-## 5. Compilar y subir
+## 4. Compilar y subir
 
 ```bash
 cd apps/mobile
 EXPO_PUBLIC_API_URL=https://TU-SERVIDOR npx eas-cli@latest build --profile production --platform android
 npx eas-cli@latest submit --platform android
-# iPhone (cuando Apple apruebe el permiso):
-EXPO_PUBLIC_API_URL=https://TU-SERVIDOR npx eas-cli@latest build --profile production --platform ios
-npx eas-cli@latest submit --platform ios
 ```
 
 Web: `npx expo export --platform web` genera `dist/`, que se sube a cualquier
 hosting estático (Vercel, Netlify, Cloudflare Pages).
 
-## 6. Textos legales
+## 5. Textos legales
 
 Las dos tiendas piden una URL de **política de privacidad**. Puntos clave que
 debe decir: qué se guarda en la cuenta (email, tareas, eventos, reglas), que

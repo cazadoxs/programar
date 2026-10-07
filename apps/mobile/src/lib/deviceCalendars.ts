@@ -9,7 +9,6 @@ const FUTURE_DAYS = 120;
 /**
  * Copies the phone's calendars into Foco: this is how Samsung, Xiaomi and any
  * other calendar without a public cloud API reaches the account (and the PC).
- * On iPhone it also covers iCloud and every account added in iOS Settings.
  */
 export async function importDeviceCalendars(): Promise<{ calendars: number; events: number }> {
   if (Platform.OS === "web") throw new Error("Solo disponible en el móvil");

@@ -12,7 +12,7 @@ import { startDictation, stopDictation, useSpeechRecognitionEvent } from "../lib
 
 /**
  * Quick capture: opened from the "+" button, the Android volume double-press
- * (foco://capture), Back Tap / Action Button on iPhone, or a global shortcut on PC.
+ * (foco://capture), or a global shortcut on PC.
  */
 export default function CaptureScreen() {
   const [text, setText] = useState("");

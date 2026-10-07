@@ -1,5 +1,4 @@
 {
-  "platforms": ["apple", "android"],
-  "apple": { "modules": ["FocoBlockerModule"] },
+  "platforms": ["android"],
   "android": { "modules": ["app.foco.blocker.FocoBlockerModule"] }
 }

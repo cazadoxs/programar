@@ -86,7 +86,6 @@ gráfico semanal (la app FocusGuard ya tiene esto en Android; se reutiliza).
 |---|---|---|
 | Android | **Doble pulsación de bajar volumen** con la pantalla encendida | Lo detecta el servicio de accesibilidad (`flagRequestFilterKeyEvents`), funciona aunque la app esté cerrada. Configurable (subir volumen, o desactivado). |
 | Android | Mosaico de Ajustes rápidos, widget, acceso directo, Quick Tap (Pixel: doble toque en la parte trasera) | Alternativas sin accesibilidad. |
-| iOS | **Doble toque en la parte trasera** (Ajustes › Accesibilidad › Tocar atrás → Atajo "Captura Foco"), **botón de Acción** (iPhone 15 Pro+), control del Centro de Control / pantalla bloqueada (iOS 18+), widget | Apple no deja a las apps escuchar botones físicos; estas son las vías oficiales. Todas abren la hoja de captura vía App Intent. |
 | PC | Atajo global (ej. `Ctrl+Shift+Espacio`) | App de escritorio. |
 
 La pestañita permite escribir o mantener pulsado para dictar. La
@@ -98,8 +97,8 @@ si hay IA conectada y el parser duda, con la IA.
 
 ### 1.5 Cuenta y sincronización
 
-- Registro con email + contraseña (más adelante: Iniciar sesión con Apple /
-  Google, obligatorio de facto en iOS si hay otros logins sociales).
+- Registro con email + contraseña (más adelante: Iniciar sesión con
+  Google).
 - Sincronización de reglas de bloqueo, tareas, capturas, ajustes y eventos
   propios entre todos los dispositivos. Funciona offline y sincroniza al
   volver la conexión (última escritura gana, por registro).
@@ -132,26 +131,11 @@ Esta es la parte que decide el diseño. Resumen honesto:
   de uso típico). Riesgo: revisión más lenta. Plan B: distribución por APK /
   F-Droid / Galaxy Store además de Play.
 
-### iOS — bloqueo potente pero sin granularidad dentro de las apps
+### iPhone: fuera del alcance
 
-- Apple solo permite bloquear con **Screen Time API** (`FamilyControls` +
-  `ManagedSettings` + `DeviceActivity`): se puede bloquear **la app entera**,
-  categorías y dominios web, con horarios y límites, y personalizar la
-  pantalla de bloqueo ("shield").
-- **No se puede bloquear solo Reels o Historias dentro de Instagram** en
-  iOS: Apple no permite a ninguna app leer lo que hay en pantalla de otra.
-  Alternativas que sí ofreceremos en iOS:
-  - Bloquear la app y dejar abierta la **versión web** (instagram.com) para
-    mensajes, bloqueando además `instagram.com/reels` y
-    `instagram.com/explore` en Safari con Screen Time (bloqueo por dominio)
-    — limitado, Screen Time bloquea dominios, no rutas, así que esto se
-    hará con una **extensión de Safari** (sí puede bloquear rutas).
-  - Tiempo de "desbloqueo consciente": abrir Instagram 5 minutos para
-    mensajes y que se vuelva a bloquear.
-- Requiere el **entitlement `com.apple.developer.family-controls`**, que
-  Apple concede previa solicitud (formulario en developer.apple.com). Sin
-  él se puede desarrollar, pero no publicar. Es lo primero que hay que
-  pedir porque tarda.
+Decisión de Álvaro (7 oct 2026): Foco **no** se hace para iPhone. Se publica
+en Android y en el PC (web / escritorio). El calendario sigue pudiendo leer
+iCloud por CalDAV o enlace `.ics`.
 
 ### PC (Windows / macOS / Linux)
 
@@ -167,10 +151,10 @@ Esta es la parte que decide el diseño. Resumen honesto:
 |---|---|
 | Google Calendar | OAuth 2.0 + Google Calendar API (servidor). Requiere verificación de la app por Google para el scope de calendario. |
 | Microsoft (Outlook, Office 365, Hotmail) | OAuth 2.0 + Microsoft Graph (servidor). |
-| Apple iCloud | En iPhone/Mac: EventKit (calendario del dispositivo). Desde Android/PC: CalDAV con contraseña específica de app. |
+| Apple iCloud | CalDAV con contraseña específica de app, o enlace `.ics` público. |
 | **Samsung Calendar** | No tiene API pública en la nube. Sus eventos están en el **proveedor de calendario de Android** (`CalendarContract`) del móvil Samsung → la app los lee en el teléfono y los sube a la cuenta Foco (con permiso). |
 | **Xiaomi / HyperOS Calendar** | Igual que Samsung: vía calendario del dispositivo Android. |
-| Cualquier otro | Calendarios del dispositivo (Android/iOS), CalDAV genérico o suscripción a URL `.ics`. |
+| Cualquier otro | Calendarios del dispositivo Android, CalDAV genérico o suscripción a URL `.ics`. |
 
 Así "todo aparece" aunque una marca no tenga API: el móvil hace de puente.
 
@@ -190,12 +174,12 @@ Así "todo aparece" aunque una marca no tenga API: el móvil hace de puente.
 
 **Todo en TypeScript, un solo monorepo.** Una lengua y un núcleo compartido
 para móvil, web, escritorio y servidor; solo el bloqueo (que tiene que ser
-nativo sí o sí) va en Kotlin y Swift.
+nativo sí o sí) va en Kotlin.
 
 ```
 apps/
-  mobile/        Expo (React Native) → iOS, Android y Web
-    modules/foco-blocker/   módulo nativo: Kotlin (Accesibilidad) + Swift (Screen Time)
+  mobile/        Expo (React Native) → Android y Web
+    modules/foco-blocker/   módulo nativo: Kotlin (Accesibilidad)
   server/        API (Hono + Postgres/Drizzle): cuenta, sync, IA, calendarios, voz
   desktop/       (fase 2) Tauri envolviendo la web + atajo global
   extension/     (fase 2) extensión de navegador para bloquear webs
@@ -206,7 +190,7 @@ legacy/
   focusguard-android/   la app Android existente (referencia y APK actual)
 ```
 
-- **Expo**: un código para iOS + Android + web, builds y publicación en
+- **Expo**: un código para Android + web, builds y publicación en
   tiendas con EAS, módulos nativos propios con Expo Modules.
 - **Hono + Drizzle + Postgres**: servidor ligero, portable (Node, Docker,
   Fly.io, Railway, Cloudflare). En desarrollo y tests usa PGlite (Postgres
@@ -233,8 +217,7 @@ legacy/
 - [x] App Expo con pestañas Hoy · Bloqueo · Calendario · Asistente ·
   Ajustes y hoja de Captura rápida.
 - [x] Módulo nativo `foco-blocker`: Android (Accesibilidad con el detector
-  de FocusGuard + bloqueo de app completa + doble pulsación de volumen);
-  iOS (Screen Time, esqueleto).
+  de FocusGuard + bloqueo de app completa + doble pulsación de volumen).
 
 ### Fase 1 — MVP Android + Web (primer lanzamiento)
 - Probar en móviles reales (Samsung, Xiaomi, Pixel), ajustar patrones de
@@ -244,16 +227,14 @@ legacy/
 - Despliegue del servidor y publicación en Google Play (prueba cerrada →
   producción) y web.
 
-### Fase 2 — iOS + PC
-- Screen Time completo (necesita el entitlement aprobado).
-- App Intents / Tocar atrás / botón Acción para la captura rápida.
+### Fase 2 — PC
 - App de escritorio (Tauri) + extensión de navegador.
-- Iniciar sesión con Apple / Google.
+- Iniciar sesión con Google.
 
 ### Fase 3 — Crecimiento
 - Suscripción (RevenueCat) con plan gratis generoso; IA incluida sin clave
   propia en el plan de pago.
-- Modo amigos/accountability, retos, widgets, Wear OS / Apple Watch.
+- Modo amigos/accountability, retos, widgets, Wear OS.
 
 ---
 
@@ -262,8 +243,6 @@ legacy/
 | Qué | Para qué | Quién |
 |---|---|---|
 | Cuenta Google Play Console (25 $ una vez) | Publicar en Android | **Álvaro** |
-| Apple Developer Program (99 $/año) | Publicar en iOS y Mac | **Álvaro** |
-| Solicitud entitlement Family Controls | Bloqueo en iOS | Álvaro la envía (yo redacto el texto) |
 | Proyecto en Google Cloud + pantalla de consentimiento OAuth | Conectar Google Calendar | Álvaro crea el proyecto, yo dejo la config |
 | Registro de app en Microsoft Entra (Azure) | Conectar Outlook | Igual |
 | Cuenta Expo (gratis) | Builds en la nube (EAS) | Álvaro |
@@ -280,8 +259,6 @@ legacy/
   árboles de accesibilidad.
 - **Revisión de Google Play por Accesibilidad** → declaración bien hecha,
   vídeo de demostración, aviso destacado; plan B fuera de Play.
-- **Entitlement de Apple** puede tardar o denegarse → pedirlo ya; en iOS el
-  resto de la app (calendario, IA, captura) funciona sin él.
 - **Verificación de Google para el scope de Calendar** (puede tardar
   semanas) → empezar con usuarios de prueba (hasta 100) mientras tanto.
 - **Batería**: todo el bloqueo es por eventos, sin sondeos (el diseño de

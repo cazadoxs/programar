@@ -6,13 +6,6 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "app.foco.mobile",
-      "entitlements": {
-        "com.apple.developer.family-controls": true
-      }
-    },
     "android": {
       "adaptiveIcon": {
         "backgroundColor": "#0F1226",
@@ -60,6 +53,10 @@
     "scheme": "foco",
     "experiments": {
       "typedRoutes": false
-    }
+    },
+    "platforms": [
+      "android",
+      "web"
+    ]
   }
 }

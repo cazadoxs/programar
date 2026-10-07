@@ -1,9 +1,7 @@
 /**
  * Apps that Foco knows how to block, with the identifiers each platform
- * needs: Android package names (Accessibility / UsageStats), iOS bundle ids
- * (only informative: on iOS the user picks apps with Apple's
- * FamilyActivityPicker and we get opaque tokens) and web domains (browser
- * extension / Safari content blocker).
+ * needs: Android package names (Accessibility / UsageStats) and web domains
+ * (browser extension on PC).
  */
 
 /** A part of an app that can be blocked on its own. `app` means the whole app. */
@@ -22,7 +20,6 @@ export interface CatalogApp {
   id: string;
   name: string;
   androidPackages: string[];
-  iosBundleIds: string[];
   webDomains: string[];
   /** Surfaces that can be blocked without blocking the whole app (Android + web). */
   surfaces: Surface[];
@@ -35,7 +32,6 @@ export const CATALOG: CatalogApp[] = [
     id: "instagram",
     name: "Instagram",
     androidPackages: ["com.instagram.android", "com.instagram.lite"],
-    iosBundleIds: ["com.burbn.instagram"],
     webDomains: ["instagram.com"],
     surfaces: ["reels", "stories", "explore", "messages", "feed"],
     webPaths: { reels: ["/reels", "/reel/"], explore: ["/explore"], messages: ["/direct"], stories: ["/stories"] },
@@ -44,7 +40,6 @@ export const CATALOG: CatalogApp[] = [
     id: "tiktok",
     name: "TikTok",
     androidPackages: ["com.zhiliaoapp.musically", "com.ss.android.ugc.trill", "com.ss.android.ugc.aweme"],
-    iosBundleIds: ["com.zhiliaoapp.musically"],
     webDomains: ["tiktok.com"],
     surfaces: ["feed", "messages", "explore"],
     webPaths: { feed: ["/foryou", "/"], explore: ["/explore"], messages: ["/messages"] },
@@ -53,7 +48,6 @@ export const CATALOG: CatalogApp[] = [
     id: "youtube",
     name: "YouTube",
     androidPackages: ["com.google.android.youtube"],
-    iosBundleIds: ["com.google.ios.youtube"],
     webDomains: ["youtube.com", "m.youtube.com"],
     surfaces: ["reels", "feed", "explore"],
     webPaths: { reels: ["/shorts"], feed: ["/feed"] },
@@ -62,7 +56,6 @@ export const CATALOG: CatalogApp[] = [
     id: "snapchat",
     name: "Snapchat",
     androidPackages: ["com.snapchat.android"],
-    iosBundleIds: ["com.toyopagroup.picaboo"],
     webDomains: ["snapchat.com"],
     surfaces: ["stories", "reels", "messages"],
     webPaths: { reels: ["/spotlight"] },
@@ -71,7 +64,6 @@ export const CATALOG: CatalogApp[] = [
     id: "facebook",
     name: "Facebook",
     androidPackages: ["com.facebook.katana", "com.facebook.lite"],
-    iosBundleIds: ["com.facebook.Facebook"],
     webDomains: ["facebook.com", "m.facebook.com"],
     surfaces: ["reels", "stories", "feed", "messages"],
     webPaths: { reels: ["/reel", "/watch"], stories: ["/stories"], messages: ["/messages"] },
@@ -80,7 +72,6 @@ export const CATALOG: CatalogApp[] = [
     id: "x",
     name: "X (Twitter)",
     androidPackages: ["com.twitter.android"],
-    iosBundleIds: ["com.atebits.Tweetie2"],
     webDomains: ["x.com", "twitter.com"],
     surfaces: ["feed", "explore", "messages"],
     webPaths: { feed: ["/home"], explore: ["/explore"], messages: ["/messages"] },
@@ -89,7 +80,6 @@ export const CATALOG: CatalogApp[] = [
     id: "reddit",
     name: "Reddit",
     androidPackages: ["com.reddit.frontpage"],
-    iosBundleIds: ["com.reddit.Reddit"],
     webDomains: ["reddit.com"],
     surfaces: ["feed"],
   },
@@ -97,7 +87,6 @@ export const CATALOG: CatalogApp[] = [
     id: "whatsapp",
     name: "WhatsApp",
     androidPackages: ["com.whatsapp", "com.whatsapp.w4b"],
-    iosBundleIds: ["net.whatsapp.WhatsApp"],
     webDomains: ["web.whatsapp.com"],
     surfaces: ["stories"],
   },

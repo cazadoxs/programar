@@ -9,14 +9,7 @@ export interface AndroidStatus {
   usageAccess: boolean;
 }
 
-export interface IosStatus {
-  platform: "ios";
-  screenTimeAuthorized: boolean;
-  selectedApps: number;
-  selectedCategories: number;
-}
-
-export type BlockerStatus = AndroidStatus | IosStatus | { platform: "unsupported" };
+export type BlockerStatus = AndroidStatus | { platform: "unsupported" };
 
 /** Serialized by buildNativeState() in src/lib/blocker.ts. */
 export interface NativeBlockState {
@@ -31,18 +24,16 @@ export interface NativeBlockState {
 }
 
 interface NativeModuleShape {
-  getStatus(): AndroidStatus | IosStatus;
+  getStatus(): AndroidStatus;
   setState(json: string): void;
   getBlockStats(): Record<string, Record<string, number>>;
   getUsageToday(): Record<string, number>;
   openAccessibilitySettings?(): void;
   openOverlaySettings?(): void;
   openUsageAccessSettings?(): void;
-  requestAuthorization?(): Promise<boolean>;
-  presentAppPicker?(): Promise<{ apps: number; categories: number }>;
 }
 
-// Absent on web and in Expo Go: every call below degrades to a no-op.
+// Android only. Absent on web and in Expo Go: every call below degrades to a no-op.
 const native = Platform.OS === "web" ? null : requireOptionalNativeModule<NativeModuleShape>("FocoBlocker");
 
 export const isBlockerAvailable = native != null;
@@ -66,5 +57,3 @@ export function getUsageToday(): Record<string, number> {
 export const openAccessibilitySettings = () => native?.openAccessibilitySettings?.();
 export const openOverlaySettings = () => native?.openOverlaySettings?.();
 export const openUsageAccessSettings = () => native?.openUsageAccessSettings?.();
-export const requestScreenTimeAuthorization = async () => (await native?.requestAuthorization?.()) ?? false;
-export const presentAppPicker = async () => (await native?.presentAppPicker?.()) ?? null;

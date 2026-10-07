@@ -4,8 +4,8 @@ App para dejar de procrastinar: **bloquea** Instagram, TikTok, YouTube,
 Snapchat, Facebook, X… (la app entera o solo Reels, Historias, Explorar,
 Mensajes o el feed), junta **todos tus calendarios** en uno, tiene un
 **asistente con IA** (Anthropic, OpenAI o Google, con tu propia clave) y una
-**captura rápida** por gesto (doble pulsación de volumen en Android, Tocar
-atrás / botón de Acción en iPhone). Una cuenta para el móvil y el PC.
+**captura rápida** por gesto (doble pulsación de volumen). Una cuenta para
+el móvil Android y el PC. No hay versión para iPhone.
 
 - Plan de producto y técnico: [`docs/PLAN.md`](docs/PLAN.md)
 - Qué hace falta para publicar: [`docs/PUBLICAR.md`](docs/PUBLICAR.md)
@@ -13,8 +13,8 @@ atrás / botón de Acción en iPhone). Una cuenta para el móvil y el PC.
 ## Estructura
 
 ```
-apps/mobile/      App Expo (Android, iOS y web) — pantallas en src/app
-  modules/foco-blocker/   Módulo nativo de bloqueo (Kotlin + Swift)
+apps/mobile/      App Expo (Android y web) — pantallas en src/app
+  modules/foco-blocker/   Módulo nativo de bloqueo (Kotlin)
 apps/server/      API: cuenta, sincronización, IA, calendarios, transcripción
 packages/core/    Lógica compartida: reglas, pomodoro, captura, calendario, sync
 legacy/focusguard-android/   La app Android anterior (FocusGuard), de referencia

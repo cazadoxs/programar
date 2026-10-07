@@ -115,11 +115,6 @@ export default function SettingsScreen() {
             </Row>
           </>
         )}
-        {Platform.OS === "ios" && (
-          <Body muted>
-            En iPhone: Ajustes › Accesibilidad › Tocar › Tocar atrás › Doble toque → atajo «Abrir URL» con foco://capture. En iPhone 15 Pro o posterior también puedes asignarlo al botón de Acción.
-          </Body>
-        )}
         <Body muted>Dictado:</Body>
         <Row>
           <Chip label="Voz del móvil (gratis)" selected={prefs.voice === "device"} onPress={() => updatePrefs({ voice: "device" })} />

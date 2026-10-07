@@ -9,8 +9,6 @@ import {
   openAccessibilitySettings,
   openOverlaySettings,
   openUsageAccessSettings,
-  presentAppPicker,
-  requestScreenTimeAuthorization,
 } from "../../../modules/foco-blocker";
 import { Body, Button, Card, Chip, Row, Screen, SectionTitle } from "../../components/ui";
 import { canPauseNow, stopSession } from "../../lib/blocker";
@@ -91,7 +89,7 @@ export default function FocusScreen() {
         <Row>{DURATIONS.map((m) => <Chip key={m} label={m >= 60 ? `${m / 60} h` : `${m} min`} selected={minutes === m} onPress={() => setMinutes(m)} />)}</Row>
         <Body muted>Apps</Body>
         <Row>{CATALOG.map((a) => <Chip key={a.id} label={a.name} selected={apps.includes(a.id)} onPress={() => setApps(toggle(apps, a.id))} />)}</Row>
-        <Body muted>Qué bloquear{Platform.OS === "ios" ? " (en iPhone siempre la app completa)" : ""}</Body>
+        <Body muted>Qué bloquear</Body>
         <Row>
           {(Object.keys(SURFACE_LABELS) as Surface[]).map((s) => (
             <Chip key={s} label={SURFACE_LABELS[s]} selected={surfaces.includes(s)} onPress={() => setSurfaces(s === "app" ? ["app"] : toggle(surfaces.filter((x) => x !== "app"), s))} />
@@ -142,39 +140,26 @@ function PermissionCard({ status, onChange }: { status: ReturnType<typeof getSta
   if (!isBlockerAvailable || status.platform === "unsupported") {
     return (
       <Card>
-        <Body>ℹ️ El bloqueo funciona en la app del móvil (Android e iPhone). Aquí puedes crear reglas y sesiones: se sincronizan con tu teléfono.</Body>
+        <Body>ℹ️ El bloqueo funciona en la app de Android. Aquí puedes crear reglas y sesiones: se sincronizan con tu teléfono.</Body>
       </Card>
     );
   }
-  if (status.platform === "android") {
-    const items = [
-      { ok: status.accessibilityEnabled, label: "Servicio de accesibilidad (imprescindible)", open: openAccessibilitySettings },
-      { ok: status.overlayPermission, label: "Mostrar sobre otras apps (pantalla de bloqueo)", open: openOverlaySettings },
-      { ok: status.usageAccess, label: "Acceso a uso (límites diarios)", open: openUsageAccessSettings },
-    ];
-    if (items.every((i) => i.ok)) return null;
-    return (
-      <Card>
-        <Body style={{ fontWeight: "700" }}>Activa los permisos</Body>
-        <Body muted>Foco solo mira las apps que eliges bloquear y todo se procesa en tu teléfono.</Body>
-        {items.map((i) => (
-          <Row key={i.label} style={{ justifyContent: "space-between" }}>
-            <Body style={{ flex: 1 }}>{i.ok ? "✅" : "⚠️"} {i.label}</Body>
-            {!i.ok && <Button small kind="secondary" label="Activar" onPress={() => { i.open(); setTimeout(onChange, 1500); }} />}
-          </Row>
-        ))}
-      </Card>
-    );
-  }
+  const items = [
+    { ok: status.accessibilityEnabled, label: "Servicio de accesibilidad (imprescindible)", open: openAccessibilitySettings },
+    { ok: status.overlayPermission, label: "Mostrar sobre otras apps (pantalla de bloqueo)", open: openOverlaySettings },
+    { ok: status.usageAccess, label: "Acceso a uso (límites diarios)", open: openUsageAccessSettings },
+  ];
+  if (items.every((i) => i.ok)) return null;
   return (
     <Card>
-      <Body style={{ fontWeight: "700" }}>Tiempo de uso de Apple</Body>
-      <Body muted>En iPhone Apple solo permite bloquear apps completas. Elige cuáles con el selector del sistema.</Body>
-      {!status.screenTimeAuthorized ? (
-        <Button label="Dar permiso" onPress={async () => { await requestScreenTimeAuthorization(); onChange(); }} />
-      ) : (
-        <Button kind="secondary" label={`Elegir apps (${status.selectedApps} apps, ${status.selectedCategories} categorías)`} onPress={async () => { await presentAppPicker(); onChange(); }} />
-      )}
+      <Body style={{ fontWeight: "700" }}>Activa los permisos</Body>
+      <Body muted>Foco solo mira las apps que eliges bloquear y todo se procesa en tu teléfono.</Body>
+      {items.map((i) => (
+        <Row key={i.label} style={{ justifyContent: "space-between" }}>
+          <Body style={{ flex: 1 }}>{i.ok ? "✅" : "⚠️"} {i.label}</Body>
+          {!i.ok && <Button small kind="secondary" label="Activar" onPress={() => { i.open(); setTimeout(onChange, 1500); }} />}
+        </Row>
+      ))}
     </Card>
   );
 }
