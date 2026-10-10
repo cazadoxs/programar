@@ -1,0 +1,26 @@
+name: Descifra
+
+on:
+  push:
+    branches: [claude/descifra-re5xu9]
+    paths: ["apps/descifra/**", ".github/workflows/descifra.yml"]
+  pull_request:
+    paths: ["apps/descifra/**", ".github/workflows/descifra.yml"]
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Latest versions on Google Maven
+        run: |
+          for a in com/android/tools/build/gradle androidx/compose/compose-bom com/google/mlkit/genai-prompt \
+                   com/google/android/gms/play-services-mlkit-document-scanner com/google/mlkit/text-recognition \
+                   com/android/billingclient/billing-ktx androidx/activity/activity-compose androidx/work/work-runtime-ktx \
+                   androidx/lifecycle/lifecycle-viewmodel-compose androidx/navigation/navigation-compose \
+                   androidx/core/core-ktx androidx/biometric/biometric androidx/datastore/datastore-preferences \
+                   androidx/core/core-splashscreen com/google/android/gms/play-services-mlkit-text-recognition \
+                   com/google/android/play/review-ktx androidx/compose/material3/material3 androidx/fragment/fragment-ktx; do
+            echo "== $a: $(curl -sSL https://dl.google.com/android/maven2/$a/maven-metadata.xml | grep -o '<version>[^<]*</version>' | sed 's/<[^>]*>//g' | tail -8 | tr '\n' ' ')"
+          done
+          echo "== kotlin plugin.compose"; curl -sSL https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/compose-compiler-gradle-plugin/maven-metadata.xml | grep -o '<version>[^<]*</version>' | tail -5
