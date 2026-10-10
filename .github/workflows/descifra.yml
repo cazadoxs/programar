@@ -20,7 +20,7 @@ jobs:
                    androidx/lifecycle/lifecycle-viewmodel-compose androidx/navigation/navigation-compose \
                    androidx/core/core-ktx androidx/biometric/biometric androidx/datastore/datastore-preferences \
                    androidx/core/core-splashscreen com/google/android/gms/play-services-mlkit-text-recognition \
-                   com/google/android/play/review-ktx androidx/compose/material3/material3 androidx/fragment/fragment-ktx; do
-            echo "== $a: $(curl -sSL https://dl.google.com/android/maven2/$a/maven-metadata.xml | grep -o '<version>[^<]*</version>' | sed 's/<[^>]*>//g' | tail -8 | tr '\n' ' ')"
+                   com/google/android/play/review-ktx androidx/compose/material3/material3 androidx/fragment/fragment-ktx com/google/android/gms/play-services-base org/jetbrains/kotlinx/kotlinx-coroutines-play-services androidx/compose/material/material-icons-extended; do
+            echo "== $a: $(curl -sSL https://dl.google.com/android/maven2/$a/maven-metadata.xml | grep -o '<version>[^<]*</version>' | sed 's/<[^>]*>//g' | grep -v -i 'alpha\|beta\|rc\|dev' | tail -6 | tr '\n' ' ')"
           done
           echo "== kotlin plugin.compose"; curl -sSL https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/compose-compiler-gradle-plugin/maven-metadata.xml | grep -o '<version>[^<]*</version>' | tail -5
