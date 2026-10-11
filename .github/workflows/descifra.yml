@@ -8,19 +8,46 @@ on:
     paths: ["apps/descifra/**", ".github/workflows/descifra.yml"]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
-  probe:
+  build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/descifra
     steps:
-      - name: Latest versions on Google Maven
-        run: |
-          for a in com/android/tools/build/gradle androidx/compose/compose-bom com/google/mlkit/genai-prompt \
-                   com/google/android/gms/play-services-mlkit-document-scanner com/google/mlkit/text-recognition \
-                   com/android/billingclient/billing-ktx androidx/activity/activity-compose androidx/work/work-runtime-ktx \
-                   androidx/lifecycle/lifecycle-viewmodel-compose androidx/navigation/navigation-compose \
-                   androidx/core/core-ktx androidx/biometric/biometric androidx/datastore/datastore-preferences \
-                   androidx/core/core-splashscreen com/google/android/gms/play-services-mlkit-text-recognition \
-                   com/google/android/play/review-ktx androidx/compose/material3/material3 androidx/fragment/fragment-ktx com/google/android/gms/play-services-base org/jetbrains/kotlinx/kotlinx-coroutines-play-services androidx/compose/material/material-icons-extended; do
-            echo "== $a: $(curl -sSL https://dl.google.com/android/maven2/$a/maven-metadata.xml | grep -o '<version>[^<]*</version>' | sed 's/<[^>]*>//g' | grep -v -i 'alpha\|beta\|rc\|dev' | tail -6 | tr '\n' ' ')"
-          done
-          echo "== kotlin plugin.compose"; curl -sSL https://repo.maven.apache.org/maven2/org/jetbrains/kotlin/compose-compiler-gradle-plugin/maven-metadata.xml | grep -o '<version>[^<]*</version>' | tail -5
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Accept Android SDK licences
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Core unit tests
+        run: ./gradlew :core:test --no-daemon
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Lint
+        run: ./gradlew :app:lintDebug --no-daemon
+
+      - name: Build release bundle (R8 + resource shrinking, unsigned)
+        run: ./gradlew :app:bundleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: descifra-reports
+          path: |
+            apps/descifra/app/build/outputs/apk/debug/*.apk
+            apps/descifra/app/build/reports/lint-results-debug.html
+            apps/descifra/core/build/reports/tests
+          if-no-files-found: ignore

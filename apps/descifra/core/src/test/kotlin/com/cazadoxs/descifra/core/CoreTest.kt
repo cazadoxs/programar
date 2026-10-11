@@ -182,4 +182,11 @@ class CoreTest {
         assertFalse(merged.amounts.any { it.cents == 99999L })
         assertTrue(merged.amounts.any { it.cents == 30000L })
     }
+
+    @Test
+    fun locatesQuotesInOriginal() {
+        val r = com.cazadoxs.descifra.core.rules.QuoteLocator.find(multa, "antes del 30 de   OCTUBRE de 2026")
+        assertNotNull(r)
+        assertEquals("antes del 30 de octubre de 2026", multa.substring(r.first, r.last + 1))
+    }
 }

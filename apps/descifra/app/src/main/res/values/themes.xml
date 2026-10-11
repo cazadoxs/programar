@@ -1,0 +1,12 @@
+<resources>
+    <style name="Theme.Descifra.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">#F4EFE6</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
+        <item name="postSplashScreenTheme">@style/Theme.Descifra</item>
+    </style>
+    <style name="Theme.Descifra" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">#F4EFE6</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+    </style>
+</resources>
