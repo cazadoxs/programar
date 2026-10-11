@@ -30,9 +30,14 @@ jobs:
       - name: Core tests (unit + live feeds)
         env:
           LIVE_FEEDS: '1'
-        run: CORE_ONLY=1 ./gradlew :core:test 2>&1 | tail -120
+        run: |
+          set -o pipefail
+          CORE_ONLY=1 ./gradlew :core:test --console=plain 2>&1 | grep -vE "^(\s+at |Download|> Task)" | tail -90
       - name: Build debug APK, lint and release (R8)
-        run: ./gradlew :app:assembleDebug :app:lintDebug :app:assembleRelease --stacktrace 2>&1 | tail -150
+        run: |
+          ./gradlew :app:assembleDebug :app:lintDebug :app:assembleRelease --console=plain > build.log 2>&1 && rc=0 || rc=$?
+          grep -E "^e: |What went wrong|Execution failed|error:|Error:|FAILURE|BUILD|Could not|not found|Unresolved|Lint found" build.log | head -80
+          exit $rc
       - name: Collect outputs
         if: always()
         run: |
