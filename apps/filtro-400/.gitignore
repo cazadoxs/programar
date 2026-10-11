@@ -11,3 +11,4 @@ keystore.properties
 servidor/node_modules/
 servidor/.wrangler/
 servidor/.dev.vars
+node_modules/

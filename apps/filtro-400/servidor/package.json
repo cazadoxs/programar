@@ -1,0 +1,17 @@
+{
+  "name": "filtro400-servidor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "typecheck": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test test/*.test.ts"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20261006.1",
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3",
+    "wrangler": "^4.19.0"
+  }
+}
