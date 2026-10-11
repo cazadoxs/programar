@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="512" height="512">
+  <defs><radialGradient id="bg" cx="30%" cy="20%" r="95%"><stop offset="0" stop-color="#22355E"/><stop offset="1" stop-color="#121C33"/></radialGradient></defs>
+  <rect width="108" height="108" fill="url(#bg)"/>
+  <g transform="translate(54 54) scale(1.32) translate(-56 -54)">
+  <!-- sheet -->
+  <path d="M38,27 H62 L74,39 V77 Q74,81 70,81 H38 Q34,81 34,77 V31 Q34,27 38,27 Z" fill="#FFFCF6"/>
+  <!-- folded corner -->
+  <path d="M62,27 V35 Q62,39 66,39 H74 Z" fill="#DCD1BC"/>
+  <!-- text lines -->
+  <rect x="41" y="44" width="22" height="3" rx="1.5" fill="#16233F" opacity="0.22"/>
+  <rect x="41" y="51" width="26" height="3" rx="1.5" fill="#16233F" opacity="0.22"/>
+  <rect x="41" y="58" width="18" height="3" rx="1.5" fill="#16233F" opacity="0.22"/>
+  <rect x="41" y="70" width="14" height="3" rx="1.5" fill="#16233F" opacity="0.22"/>
+  <!-- scan glow + highlighter beam -->
+  <rect x="34" y="55" width="40" height="9" fill="#F2B33D" opacity="0.28"/>
+  <rect x="28" y="63" width="52" height="4" rx="2" fill="#F2B33D"/>
+  <!-- sparkle -->
+  <path d="M80,30 Q81,36 86,37 Q81,38 80,44 Q79,38 74,37 Q79,36 80,30 Z" fill="#F2B33D"/>
+
+</g>
+</svg>
