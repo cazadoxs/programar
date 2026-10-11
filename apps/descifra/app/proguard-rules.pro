@@ -25,3 +25,10 @@
     public static int d(...);
     public static int i(...);
 }
+
+# Anthropic SDK pulls in a JSON-schema generator that references JVM-only reflection classes.
+-dontwarn java.lang.reflect.AnnotatedParameterizedType
+-dontwarn java.lang.reflect.AnnotatedType
+-dontwarn com.github.victools.jsonschema.**
+-dontwarn javax.lang.model.**
+-dontwarn org.slf4j.**
