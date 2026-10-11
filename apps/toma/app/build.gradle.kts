@@ -65,8 +65,7 @@ android {
     lint {
         abortOnError = true
         checkReleaseBuilds = true
-        textReport = true
-        textOutput = file("stdout")
+        htmlReport = true
     }
 
     packaging {

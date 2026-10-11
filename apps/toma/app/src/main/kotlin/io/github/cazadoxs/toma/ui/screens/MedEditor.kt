@@ -318,7 +318,7 @@ fun MedEditorScreen(vm: AppViewModel, medId: Long, onClose: () -> Unit, onPlus: 
             ExposedDropdownMenuBox(expanded = open, onExpandedChange = { open = it }) {
                 OutlinedTextField(
                     value = Formats.instruction(context, instruction) ?: stringResource(R.string.instr_none), onValueChange = {},
-                    readOnly = true, modifier = Modifier.menuAnchor().fillMaxWidth(),
+                    readOnly = true, modifier = Modifier.menuAnchor(androidx.compose.material3.MenuAnchorType.PrimaryNotEditable).fillMaxWidth(),
                     trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(open) },
                 )
                 ExposedDropdownMenu(expanded = open, onDismissRequest = { open = false }) {

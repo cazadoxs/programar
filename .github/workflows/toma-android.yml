@@ -29,6 +29,11 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Tests, lint and builds
         run: ./gradlew --no-daemon :core:test :app:testDebugUnitTest :app:lintDebug :app:assembleDebug :app:bundleRelease
+      - name: Lint errors
+        if: failure()
+        run: |
+          f=app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
+          [ -f "$f" ] && grep -B1 -A4 "Error:" "$f" | head -150 || true
       - uses: actions/upload-artifact@v4
         if: always()
         with:

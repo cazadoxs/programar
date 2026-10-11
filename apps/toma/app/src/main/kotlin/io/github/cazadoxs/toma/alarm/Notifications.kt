@@ -1,6 +1,7 @@
 package io.github.cazadoxs.toma.alarm
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -80,6 +81,7 @@ object Notifications {
      * Shows (or re-shows) the ringing alarm for the doses that are due. The sound repeats until
      * the user confirms, snoozes or opens it: [NotificationCompat.FLAG_INSISTENT].
      */
+    @SuppressLint("MissingPermission") // canPost() checks it
     fun ring(context: Context, due: List<DueDose>, profiles: List<ProfileEntity>) {
         if (due.isEmpty() || !canPost(context)) return
         val names = profiles.associate { it.id to it.name }
@@ -129,6 +131,7 @@ object Notifications {
         return if (profileName != null) "$profileName: $base" else base
     }
 
+    @SuppressLint("MissingPermission")
     fun refill(context: Context, med: MedicationEntity, daysLeft: Int?) {
         if (!canPost(context)) return
         val text = when {
@@ -152,6 +155,7 @@ object Notifications {
         NotificationManagerCompat.from(context).notify(ID_REFILL_BASE + (med.id % 10_000).toInt(), n)
     }
 
+    @SuppressLint("MissingPermission")
     fun info(context: Context, title: String, text: String) {
         if (!canPost(context)) return
         val n = NotificationCompat.Builder(context, CHANNEL_INFO)
