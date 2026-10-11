@@ -98,7 +98,7 @@ data class Schedule(
             val windowEnd = windowStart.plus(Duration.ofDays(LOOKAHEAD_CHUNK_DAYS))
             occurrences(windowStart, windowEnd, zone).firstOrNull()?.let { return it }
             val end = endDate
-            if (end != null && LocalDate.ofInstant(windowEnd, zone).isAfter(end)) return null
+            if (end != null && windowEnd.atZone(zone).toLocalDate().isAfter(end)) return null
             windowStart = windowEnd
         }
         return null
@@ -130,8 +130,8 @@ data class Schedule(
 
     private fun wallClockOccurrences(from: Instant, to: Instant, zone: ZoneId): List<Occurrence> {
         val result = ArrayList<Occurrence>()
-        var date = LocalDate.ofInstant(from, zone).minusDays(1)
-        val last = LocalDate.ofInstant(to, zone).plusDays(1)
+        var date = from.atZone(zone).toLocalDate().minusDays(1)
+        val last = to.atZone(zone).toLocalDate().plusDays(1)
         val sorted = slots.sortedBy { it.minuteOfDay }
         while (!date.isAfter(last)) {
             if (matchesDay(date)) {

@@ -218,7 +218,7 @@ class Repository(private val db: TomaDatabase) {
     }
 
     suspend fun streak(profileId: Long?, now: Instant = Instant.now()): Int {
-        val today = LocalDate.ofInstant(now, zone)
+        val today = now.atZone(zone).toLocalDate()
         val from = today.minusDays(STREAK_LOOKBACK_DAYS).atStartOfDay(zone).toInstant()
         val (expected, records) = expectedAndRecords(profileId, from, now, now)
         return Adherence.streakDays(expected, records, today, zone, now)

@@ -63,7 +63,7 @@ object Adherence {
     ): Int {
         val taken = records.filter { it.status == DoseStatus.TAKEN }
             .map { it.medicationId to it.scheduledAt }.toSet()
-        val byDay = expected.groupBy { LocalDate.ofInstant(it.at, zone) }
+        val byDay = expected.groupBy { it.at.atZone(zone).toLocalDate() }
         var streak = 0
         var day = today
         val earliest = byDay.keys.minOrNull() ?: return 0
