@@ -11,25 +11,23 @@ jobs:
       - name: Probe
         run: |
           set +e
-          UA="BusMetroVLC-probe/0.1"
+          UA="BusMetroVLC-probe/0.2"
           mkdir d && cd d
-          echo "== EMT GTFS"; curl -sL -A "$UA" -o emt.zip -w "%{http_code} %{size_download}\n" "https://opendata.vlci.valencia.es/dataset/ab058cf8-ad3e-4d9c-ac89-0c6367ecf351/resource/c81b69e6-c082-44dc-acc6-66fc417b4e66/download/google_transit.zip"
-          unzip -o -q emt.zip -d emt && wc -l emt/*.txt && for f in emt/*.txt; do echo "-- $f"; head -3 $f; done
-          echo "== METRO GTFS https"; curl -sL -A "$UA" -o metro.zip -w "%{http_code} %{size_download} %{url_effective}\n" "https://www.metrovalencia.es/google_transit_feed/google_transit.zip"
-          echo "== METRO GTFS http"; curl -sL -A "$UA" -o metro2.zip -w "%{http_code} %{size_download} %{url_effective}\n" "http://www.metrovalencia.es/google_transit_feed/google_transit.zip"
-          ls -la; (unzip -o -q metro.zip -d metro || unzip -o -q metro2.zip -d metro); wc -l metro/*.txt; for f in metro/*.txt; do echo "-- $f"; head -3 $f; done; cat metro/calendar.txt | head -20; cat metro/feed_info.txt
-          echo "== RENFE GTFS"; curl -sL -A "$UA" -o renfe.zip -w "%{http_code} %{size_download}\n" "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"
-          unzip -o -q renfe.zip -d renfe; wc -l renfe/*.txt; head -3 renfe/routes.txt renfe/stops.txt renfe/trips.txt renfe/stop_times.txt renfe/calendar.txt; grep -i "valencia\|xativa\|gandia" renfe/routes.txt | head; grep -c "^4" renfe/stops.txt
-          for u in alerts.json trip_updates.json vehicle_positions.json trip_updates_LD.json; do echo "== RENFE RT $u"; curl -s -A "$UA" "https://gtfsrt.renfe.com/$u" -w "\nHTTP %{http_code} %{size_download}\n" | head -c 1500; echo; done
-          echo "== VALENBISI"; curl -s -A "$UA" "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/valenbisi-disponibilitat-valenbisi-dsiponibilidad/records?limit=2" | head -c 2000; echo
-          curl -s "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/valenbisi-disponibilitat-valenbisi-dsiponibilidad?select=metas" | head -c 2500; echo
-          echo "== OD EMT"; curl -s -A "$UA" "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/emt/records?limit=2" | head -c 2500; echo
-          echo "== OD FGV"; curl -s -A "$UA" "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets/fgv-estacions-estaciones/records?limit=2" | head -c 2500; echo
-          echo "== OD catalog search"; curl -s "https://valencia.opendatasoft.com/api/explore/v2.1/catalog/datasets?limit=60&select=dataset_id&where=search(%22emt%22)%20or%20search(%22fgv%22)%20or%20search(%22metro%22)%20or%20search(%22valenbisi%22)%20or%20search(%22incid%22)" | head -c 4000; echo
-          echo "== EMT SAE GET"; curl -s -A "Mozilla/5.0" -e "https://www.emtvalencia.es" "https://www.emtvalencia.es/EMT/mapfunctions/MapUtilsPetitions.php?sec=getSAE&parada=508&adaptados=false" -w "\nHTTP %{http_code}\n" | head -c 1500; echo
-          echo "== EMT SAE POST"; curl -s -A "Mozilla/5.0" -e "https://www.emtvalencia.es" -d "parada=508&adaptados=false" "https://www.emtvalencia.es/EMT/mapfunctions/MapUtilsPetitions.php?sec=getSAE" -w "\nHTTP %{http_code}\n" | head -c 1500; echo
-          echo "== EMT terms"; curl -s -A "Mozilla/5.0" "https://www.emtvalencia.es/ciudadano/index.php?option=com_content&view=article&id=99" -w "\nHTTP %{http_code}\n" | sed 's/<[^>]*>//g' | grep -i -m 20 "reutiliz\|propiedad\|licen\|uso" ; echo
-          echo "== FGV pages"; for u in "https://www.metrovalencia.es/es/" "https://www.fgv.es/" "https://www.metrovalencia.es/ajax/estaciones" ; do curl -s -o /dev/null -A "Mozilla/5.0" -w "$u %{http_code}\n" "$u"; done
-          curl -s -A "Mozilla/5.0" "https://www.metrovalencia.es/es/" | grep -o 'https\?://[^"'"'"' ]*\(api\|ajax\|json\)[^"'"'"' ]*' | sort -u | head -30
-          echo "== OpenFreeMap"; curl -s -o /dev/null -w "%{http_code}\n" https://tiles.openfreemap.org/styles/liberty
-          echo "== GVA dadesobertes fgv"; curl -s "https://dadesobertes.gva.es/api/3/action/package_search?q=fgv&rows=10" | python3 -c "import sys,json; d=json.load(sys.stdin); [print(r['name'], [ (x.get('format'), x.get('url')) for x in r['resources']][:6], r.get('license_id')) for r in d['result']['results']]" 
+          CK=https://opendata.vlci.valencia.es/api/3/action
+          for q in valenbisi emt fgv metro "transporte"; do echo "== CKAN search $q"; curl -s -m 30 -A "$UA" "$CK/package_search?q=$q&rows=15" | python3 -c "
+          import sys,json
+          d=json.load(sys.stdin)
+          for r in d['result']['results']:
+            print('PKG', r['name'], r.get('license_id'), r.get('license_title'))
+            for x in r['resources'][:8]: print('   ', x.get('format'), x.get('datastore_active'), x.get('id'), x.get('url'))
+          "; done
+          echo "== valenbisi datastore"; curl -s -m 30 "$CK/datastore_search?resource_id=6afb29b7-43a6-4887-859d-c7075c69c200&limit=2" | head -c 2500; echo
+          echo "== metro mobilitydatabase latest"; curl -sL -m 120 -o metro.zip -w "%{http_code} %{size_download} %{url_effective}\n" "https://files.mobilitydatabase.org/mdb-1054/latest.zip"
+          unzip -o -q metro.zip -d metro; wc -l metro/*.txt; for f in metro/*.txt; do echo "-- $f"; head -3 $f; done; head -30 metro/calendar.txt; cat metro/feed_info.txt; cut -d, -f1-9 metro/calendar_dates.txt | tail -5
+          curl -s -m 30 "https://api.mobilitydatabase.org/v1/feeds/mdb-1054" | head -c 1500; echo
+          echo "== RENFE Valencia"; curl -sL -m 120 -o renfe.zip "https://ssl.renfe.com/ftransit/Fichero_CER_FOMENTO/fomento_transit.zip"; unzip -o -q renfe.zip -d renfe
+          grep "^40T" renfe/routes.txt | wc -l; grep "^40T" renfe/trips.txt | head -3; T=$(grep "^40T" renfe/trips.txt | head -1 | cut -d, -f3); grep "^$T," renfe/stop_times.txt | head -40
+          grep -c "" renfe/stops.txt; awk -F, '$3>38.8 && $3<40.0 && $4>-1.3 && $4<0.2' renfe/stops.txt | head -80
+          head -5 renfe/shapes.txt; grep "^40" renfe/shapes.txt | head -2
+          curl -s -m 30 https://gtfsrt.renfe.com/trip_updates.json | grep -o '"tripId": "[^"]*"' | head -40
+          echo "== FGV quick"; for u in https://www.metrovalencia.es/ https://geoportal.emtvalencia.es/ https://www.emtvalencia.es/; do curl -s -m 15 -o /dev/null -w "$u %{http_code}\n" $u; done
