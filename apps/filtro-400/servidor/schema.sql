@@ -4,6 +4,9 @@ CREATE TABLE IF NOT EXISTS reports (
   reporter_hash TEXT NOT NULL,
   category TEXT NOT NULL,
   created_at INTEGER NOT NULL,
+  -- SHA-256(PEPPER + día + IP): no recuperable. Sirve para que una misma red no
+  -- cuente varias veces el mismo día para meter un número en la lista.
+  ip_hash TEXT NOT NULL DEFAULT '',
   PRIMARY KEY (number, reporter_hash)
 );
 CREATE INDEX IF NOT EXISTS reports_created ON reports(created_at);

@@ -71,9 +71,10 @@ async function handleReport(req: Request, env: Env): Promise<Response> {
 
   // Una denuncia por número y persona: si repite, se actualiza la categoría y la fecha.
   await env.DB.prepare(
-    "INSERT INTO reports (number, reporter_hash, category, created_at) VALUES (?1, ?2, ?3, ?4) " +
-      "ON CONFLICT(number, reporter_hash) DO UPDATE SET category = excluded.category, created_at = excluded.created_at",
-  ).bind(report.number, reporterHash, report.category, now).run();
+    "INSERT INTO reports (number, reporter_hash, category, created_at, ip_hash) VALUES (?1, ?2, ?3, ?4, ?5) " +
+      "ON CONFLICT(number, reporter_hash) DO UPDATE SET category = excluded.category, " +
+      "created_at = excluded.created_at, ip_hash = excluded.ip_hash",
+  ).bind(report.number, reporterHash, report.category, now, ipHash).run();
 
   return json(202, { ok: true });
 }
@@ -122,7 +123,7 @@ async function handleList(req: Request, env: Env, ctx: ExecutionContext): Promis
   const now = Date.now();
   const minReports = Math.max(2, Number(env.MIN_REPORTS) || 3);
   const { results } = await env.DB.prepare(
-    "SELECT number, category, COUNT(*) AS reporters FROM reports WHERE created_at > ?1 GROUP BY number, category",
+    "SELECT number, category, COUNT(DISTINCT ip_hash) AS reporters FROM reports WHERE created_at > ?1 GROUP BY number, category",
   ).bind(now - LIMITS.reportWindowDays * DAY).all<Row>();
   const excludedRows = await env.DB.prepare("SELECT number FROM excluded").all<{ number: string }>();
   const excluded = new Set(excludedRows.results.map((r) => r.number));
