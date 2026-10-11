@@ -123,6 +123,15 @@ class TranscriptionService : Service() {
         try { getSystemService(NotificationManager::class.java).notify(2000 + id.toInt(), n) } catch (_: SecurityException) {}
     }
 
+    /** Android 15 caps dataSync services at 6 h/day: stop cleanly, jobs resume next time the app opens. */
+    override fun onTimeout(startId: Int, fgsType: Int) {
+        _current.value?.let { cancelled.set(it) }   // lets the native loop exit at the next callback
+        worker?.cancel()
+        stopSelf()
+    }
+
+    override fun onTimeout(startId: Int) = onTimeout(startId, 0)
+
     override fun onDestroy() {
         scope.cancel()
         wake?.let { if (it.isHeld) it.release() }

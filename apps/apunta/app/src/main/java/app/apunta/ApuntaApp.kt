@@ -13,6 +13,7 @@ import app.apunta.transcribe.Transcriber
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
 
 /** Hand-rolled service locator: the app is small enough that a DI framework costs more than it saves. */
 class ApuntaApp : Application() {
@@ -27,6 +28,8 @@ class ApuntaApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // Exported transcripts are only needed while the share sheet is open.
+        appScope.launch(Dispatchers.IO) { java.io.File(cacheDir, "exports").deleteRecursively() }
         val nm = getSystemService(NotificationManager::class.java)
         nm.createNotificationChannel(
             NotificationChannel(CH_RECORD, getString(R.string.ch_record), NotificationManager.IMPORTANCE_LOW)
