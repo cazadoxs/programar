@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="foco_accessibility_label">Foco · bloqueo de distracciones</string>
+    <string name="foco_accessibility_description">Foco usa este permiso para detectar cuándo abres una app o una sección que has decidido bloquear (por ejemplo Reels o Historias) y sacarte de ella, y para abrir la captura rápida al pulsar dos veces el botón de volumen. Solo mira las apps que tú eliges bloquear, todo se procesa en el teléfono y no se envía nada a ningún sitio.</string>
+</resources>

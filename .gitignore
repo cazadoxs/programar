@@ -1,13 +1,14 @@
-*.iml
-.gradle/
-build/
-.idea/
-local.properties
+node_modules/
+dist/
+.env
+.env.*
+!.env.example
+*.log
 .DS_Store
-/captures
-.externalNativeBuild
-.cxx
-*.apk
-!release/*.apk
-/keystore/
-javac.*.args
+# Expo
+.expo/
+apps/mobile/android/
+apps/mobile/ios/
+web-build/
+# server local data
+apps/server/.data/
