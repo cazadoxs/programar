@@ -94,6 +94,7 @@ fun DetailScreen(letter: Letter, isPro: Boolean, busy: Boolean, a: DetailActions
 
     BoxWithConstraints(Modifier.fillMaxSize()) {
         val wide = maxWidth >= 840.dp
+        val fullHeight = maxHeight
         if (wide) {
             Row(Modifier.fillMaxSize()) {
                 Box(Modifier.weight(1f).fillMaxHeight()) { Summary(letter, isPro, busy, a, show, showHeaderOriginal = false) }
@@ -106,7 +107,7 @@ fun DetailScreen(letter: Letter, isPro: Boolean, busy: Boolean, a: DetailActions
             Box(Modifier.fillMaxSize()) {
                 Summary(letter, isPro, busy, a, show, showHeaderOriginal = true, bottomSpace = 76.dp)
                 // Peek panel: the original is always one tap away, never hidden behind a menu.
-                val height = if (showOriginal) maxHeight * 0.62f else 64.dp
+                val height = if (showOriginal) fullHeight * 0.62f else 64.dp
                 Column(
                     Modifier
                         .align(Alignment.BottomCenter)
