@@ -10,7 +10,28 @@ Lo demás ya está preparado en el repositorio.
 2. **Google Play Console** (25 $, pago único) — play.google.com/console.
 3. **Hosting del servidor** con Postgres — por ejemplo Railway o Fly.io +
    Neon. Variables: `DATABASE_URL`, `JWT_SECRET`, `ENCRYPTION_KEY`
-   (`openssl rand -base64 32`), `PUBLIC_URL`.
+   (`openssl rand -base64 32`), `PUBLIC_URL` (URL del servidor), `WEB_URL`
+   (URL de la web de Foco) y `TRUST_PROXY=1` si va detrás de un proxy.
+   Nunca actives `BILLING_DEV_ACCEPT_ALL` en producción (solo para pruebas).
+
+## 1b. Foco Pro (compra única)
+
+Modelo: gratis con límites + **Foco Pro** (pago único, sin suscripción ni
+anuncios). Precio sugerido 9,99 € (lanzamiento 6,99 €).
+
+1. Play Console › Monetizar › **Productos integrados en la aplicación** →
+   crear el producto **`foco_pro_lifetime`** (no consumible) y activarlo.
+2. Play Console › Configuración › Acceso a la API → vincular un proyecto de
+   Google Cloud, crear una **cuenta de servicio** con permiso de lectura de
+   pedidos y gestión de compras, y descargar su JSON.
+3. En el servidor: `GOOGLE_PLAY_PACKAGE` (el id del paquete) y
+   `GOOGLE_PLAY_SERVICE_ACCOUNT` (el JSON de la cuenta de servicio).
+   El servidor verifica y confirma cada compra; un token queda ligado a una
+   sola cuenta.
+
+Límites gratis: 2 apps con bloqueo por partes, 3 reglas activas, 1 calendario
+en la nube, estadísticas de 7 días. Pro lo quita y añade modo estricto y
+Modo Trabajo de la IA.
 
 ## 2. Google Play: declaración de Accesibilidad
 
@@ -22,7 +43,19 @@ Play lo permite si se declara bien:
   para "bloquear contenido/apps elegidos por el usuario para su bienestar
   digital". Adjuntar un vídeo corto mostrando el aviso y el bloqueo.
 - La app ya muestra un aviso destacado antes de mandar a los ajustes
-  (pantalla Bloqueo) y explica que todo se procesa en el teléfono.
+  (pantalla Bloqueo) y explica que todo se procesa en el teléfono. La política lista para publicar está en `docs/store/privacy-policy.html`
+(alójala, por ejemplo, en GitHub Pages) y rellena los marcadores `[apellidos]`,
+`[email]`, `[usuario]`, hosting y región. Toda la ficha, capturas y la guía de
+vídeos están en `docs/store/` y `docs/marketing/`.
+- Declarar también: servicio en primer plano de tipo *specialUse* (motor de
+  respaldo), acceso a datos de uso, y superposición (`SYSTEM_ALERT_WINDOW`),
+  todos para bloquear lo que el usuario eligió. Android 17 con Protección
+  Avanzada desactiva Accesibilidad para apps que no son de accesibilidad: el
+  motor de respaldo sigue bloqueando apps enteras.
+- Cuentas personales nuevas: prueba cerrada con **12 testers durante 14
+  días** antes de producción.
+- Borrado de cuenta: está en la app (Ajustes) y hay que dar también una URL
+  web para pedirlo.
 - Rellenar "Seguridad de los datos": cuenta (email), contenido creado por el
   usuario (tareas/eventos), nada de uso de apps sale del dispositivo.
 
@@ -68,4 +101,7 @@ Las dos tiendas piden una URL de **política de privacidad**. Puntos clave que
 debe decir: qué se guarda en la cuenta (email, tareas, eventos, reglas), que
 las claves de IA se guardan cifradas y solo se usan para llamar al proveedor
 que el usuario eligió, y que la detección de apps/pantallas ocurre solo en el
-teléfono.
+teléfono. La política lista para publicar está en `docs/store/privacy-policy.html`
+(alójala, por ejemplo, en GitHub Pages) y rellena los marcadores `[apellidos]`,
+`[email]`, `[usuario]`, hosting y región. Toda la ficha, capturas y la guía de
+vídeos están en `docs/store/` y `docs/marketing/`.
