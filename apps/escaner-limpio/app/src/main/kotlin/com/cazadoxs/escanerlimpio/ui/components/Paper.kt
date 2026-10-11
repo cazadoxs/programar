@@ -1,7 +1,6 @@
 package com.cazadoxs.escanerlimpio.ui.components
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.GenericShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -10,28 +9,38 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Outline
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathOperation
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.cazadoxs.escanerlimpio.ui.theme.LocalBrand
 
 /** A sheet of paper with rounded corners and a dog-eared top-right corner. */
-fun dogEarShape(fold: Dp, radius: Dp): Shape = GenericShape { size, density ->
-    val f = with(density) { fold.toPx() }
-    val r = with(density) { radius.toPx() }
-    val rounded = Path().apply {
-        addRoundRect(RoundRect(0f, 0f, size.width, size.height, CornerRadius(r, r)))
+private class DogEarShape(private val fold: Dp, private val radius: Dp) : Shape {
+    override fun createOutline(size: Size, layoutDirection: LayoutDirection, density: Density): Outline {
+        val f = with(density) { fold.toPx() }
+        val r = with(density) { radius.toPx() }
+        val rounded = Path().apply {
+            addRoundRect(RoundRect(0f, 0f, size.width, size.height, CornerRadius(r, r)))
+        }
+        val corner = Path().apply {
+            moveTo(size.width - f, 0f)
+            lineTo(size.width, 0f)
+            lineTo(size.width, f)
+            close()
+        }
+        val result = Path().apply { op(rounded, corner, PathOperation.Difference) }
+        return Outline.Generic(result)
     }
-    val corner = Path().apply {
-        moveTo(size.width - f, 0f)
-        lineTo(size.width, 0f)
-        lineTo(size.width, f)
-        close()
-    }
-    addPath(Path().apply { op(rounded, corner, androidx.compose.ui.graphics.PathOperation.Difference) })
 }
+
+fun dogEarShape(fold: Dp, radius: Dp): Shape = DogEarShape(fold, radius)
 
 /** Paper look: dog-eared shape, soft shadow and the folded flap drawn on top. */
 @Composable
