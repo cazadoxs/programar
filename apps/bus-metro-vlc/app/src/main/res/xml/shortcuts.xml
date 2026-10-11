@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:shortcutId="nearby"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_nearby"
+        android:shortcutShortLabel="@string/shortcut_nearby">
+        <intent
+            android:action="vlc.busmetro.NEARBY"
+            android:targetPackage="com.cazadoxs.busmetrovlc"
+            android:targetClass="vlc.busmetro.ui.MainActivity" />
+    </shortcut>
+    <shortcut
+        android:shortcutId="map"
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_map"
+        android:shortcutShortLabel="@string/shortcut_map">
+        <intent
+            android:action="vlc.busmetro.MAP"
+            android:targetPackage="com.cazadoxs.busmetrovlc"
+            android:targetClass="vlc.busmetro.ui.MainActivity" />
+    </shortcut>
+</shortcuts>
