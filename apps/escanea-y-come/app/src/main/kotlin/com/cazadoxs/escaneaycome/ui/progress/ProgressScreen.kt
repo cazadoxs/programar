@@ -96,9 +96,16 @@ fun ProgressScreen(onPlus: () -> Unit) {
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
                 Spacer(Modifier.height(12.dp))
-                val shown = if (s.days.size > 31) s.days.chunked(7).map { w -> w.last() to w.map { it.totals.kcal }.filter { it > 0 }.average().takeIf { !it.isNaN() } ?: 0.0 } else null
+                val shown: List<Pair<Long, Double>>? = if (s.days.size > 31) {
+                    s.days.chunked(7).map { w ->
+                        val logged = w.map { it.totals.kcal }.filter { it > 0 }
+                        w.last().day to (if (logged.isEmpty()) 0.0 else logged.average())
+                    }
+                } else {
+                    null
+                }
                 if (shown != null) {
-                    BarChart(shown.map { it.second }, shown.map { LocalDate.ofEpochDay(it.first.day).dayOfMonth.toString() }, s.settings.kcalGoal.toDouble())
+                    BarChart(shown.map { it.second }, shown.map { LocalDate.ofEpochDay(it.first).dayOfMonth.toString() }, s.settings.kcalGoal.toDouble())
                     Text("Media semanal", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
                 } else {
                     BarChart(s.days.map { it.totals.kcal }, s.days.map { label(it.day, s.days.size) }, s.settings.kcalGoal.toDouble())
