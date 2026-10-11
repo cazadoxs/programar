@@ -24,6 +24,7 @@ android {
         targetSdk = 36
         versionCode = 1
         versionName = "1.0.0"
+        buildConfigField("String", "SUPPORT_EMAIL", "\"${secret("DESCIFRA_SUPPORT_EMAIL") ?: ""}\"")
         buildConfigField("String", "PLAY_LICENSE_KEY", "\"${secret("DESCIFRA_PLAY_LICENSE_KEY") ?: ""}\"")
     }
 

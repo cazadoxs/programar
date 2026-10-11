@@ -119,6 +119,16 @@ fun SettingsScreen(s: Settings, isPro: Boolean, nano: NanoState?, nanoDownloadin
                         }
                     }
                     Spacer(Modifier.height(10.dp))
+                    var custom by remember(s.provider, s.model) { mutableStateOf(if (s.model in s.provider.models) "" else s.model) }
+                    OutlinedTextField(
+                        value = custom,
+                        onValueChange = { v -> custom = v.trim().take(60); a.update { it.copy(model = custom) } },
+                        modifier = Modifier.fillMaxWidth(),
+                        label = { Text("Otro modelo (opcional)") },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(autoCorrectEnabled = false),
+                    )
+                    Spacer(Modifier.height(10.dp))
                     if (s.hasKey) {
                         Chip("Clave guardada, cifrada en este móvil", p.green)
                         TextButton(onClick = { a.saveKey(s.provider, null) }) { Text("Quitar la clave", color = p.stamp) }

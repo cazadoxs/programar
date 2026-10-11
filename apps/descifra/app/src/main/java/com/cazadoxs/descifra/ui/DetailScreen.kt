@@ -80,6 +80,7 @@ class DetailActions(
     val onToggleReminders: () -> Unit,
     val onChangeReceived: (LocalDate) -> Unit,
     val onCopyDraft: () -> Unit,
+    val onReport: () -> Unit,
 )
 
 @OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
@@ -266,6 +267,7 @@ private fun Summary(
                 color = if (letter.done) p.ink else p.green,
                 onColor = p.onStamp,
             )
+            TextButton(onClick = a.onReport) { Text("¿Algo no cuadra en este resumen? Avísanos", color = p.blue) }
             Text(
                 "Descifra no es un servicio legal ni fiscal. Ante un embargo, un juicio o una sanción importante, consulta con un profesional.",
                 color = p.inkSoft,

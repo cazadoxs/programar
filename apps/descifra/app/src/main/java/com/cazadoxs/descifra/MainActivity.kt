@@ -101,13 +101,19 @@ class MainActivity : FragmentActivity() {
 
     override fun onStart() {
         super.onStart()
+        external = false
         lifecycleScope.launch { (application as DescifraApp).billing.refresh() }
         vm.refreshNano()
     }
 
+    /** True while we hand over to another screen (scanner, picker, calendar, share) and expect to come back. */
+    private var external = false
+
+    private fun <T> ext(block: () -> T): T { external = true; return block() }
+
     override fun onStop() {
         super.onStop()
-        vm.lockNow()
+        if (!external) vm.lockNow()
     }
 
     private fun handleIntent(intent: Intent?) {
@@ -188,7 +194,7 @@ class MainActivity : FragmentActivity() {
             val prefs = getSharedPreferences("ui", MODE_PRIVATE)
             if (letters.isNotEmpty() && Build.VERSION.SDK_INT >= 33 && !Reminders.canNotify(this@MainActivity) && !prefs.getBoolean("askedNotif", false)) {
                 prefs.edit().putBoolean("askedNotif", true).apply()
-                notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                ext { notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS) }
             }
         }
 
@@ -200,7 +206,7 @@ class MainActivity : FragmentActivity() {
                 .setScannerMode(GmsDocumentScannerOptions.SCANNER_MODE_FULL)
                 .build()
             GmsDocumentScanning.getClient(options).getStartScanIntent(this@MainActivity)
-                .addOnSuccessListener { scanner.launch(IntentSenderRequest.Builder(it).build()) }
+                .addOnSuccessListener { ext { scanner.launch(IntentSenderRequest.Builder(it).build()) } }
                 .addOnFailureListener { vm.toast("No se pudo abrir el escáner. Prueba con «Foto o PDF» o pega el texto.") }
             Unit
         }
@@ -221,7 +227,7 @@ class MainActivity : FragmentActivity() {
                         val text = clip?.takeIf { it.itemCount > 0 }?.getItemAt(0)?.coerceToText(this@MainActivity)?.toString().orEmpty()
                         vm.onText(text)
                     },
-                    onImport = { picker.launch(arrayOf("image/*", "application/pdf")) },
+                    onImport = { ext { picker.launch(arrayOf("image/*", "application/pdf")) } },
                     onOpen = { vm.go(Screen.Detail(it)) },
                     onSettings = { vm.go(Screen.Settings) },
                 )
@@ -247,19 +253,19 @@ class MainActivity : FragmentActivity() {
                         onBack = { vm.back() },
                         update = vm::update,
                         saveKey = { provider, key -> (application as DescifraApp).repository.setApiKey(provider, key) },
-                        openUrl = { url -> startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) },
+                        openUrl = { url -> ext { startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url))) } },
                         downloadNano = vm::downloadNano,
                         onPaywall = { vm.go(Screen.Paywall) },
                         onPrivacy = { vm.go(Screen.Privacy) },
                         onErase = vm::eraseEverything,
-                        onNotificationsPermission = { if (Build.VERSION.SDK_INT >= 33) notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS) },
+                        onNotificationsPermission = { if (Build.VERSION.SDK_INT >= 33) ext { notifPermission.launch(Manifest.permission.POST_NOTIFICATIONS) } },
                         onLockToggled = { on ->
                             if (on) authenticate(onSuccess = { vm.update { it.copy(lockWithBiometrics = true) } })
                             else vm.update { it.copy(lockWithBiometrics = false) }
                         },
                     ),
                 )
-                Screen.Paywall -> PaywallScreen(pro, onBuy = { lifecycleScope.launch { (application as DescifraApp).billing.buy(this@MainActivity) } }, onBack = { vm.back() })
+                Screen.Paywall -> PaywallScreen(pro, onBuy = { lifecycleScope.launch { ext { Unit }; (application as DescifraApp).billing.buy(this@MainActivity) } }, onBack = { vm.back() })
                 Screen.Privacy -> PrivacyScreen(onBack = { vm.back() })
             }
 
@@ -284,7 +290,7 @@ class MainActivity : FragmentActivity() {
         onCalendar = { d: Deadline ->
             val l = vm.repo.get(id) ?: return@DetailActions
             try {
-                startActivity(Reminders.addToCalendarIntent(l.analysis.title, d))
+                ext { startActivity(Reminders.addToCalendarIntent(l.analysis.title, d)) }
             } catch (e: Exception) {
                 vm.toast("No hay ninguna app de calendario instalada.")
             }
@@ -292,19 +298,19 @@ class MainActivity : FragmentActivity() {
         onCopy = { copy(it, "Copiado") },
         onShare = {
             val l = vm.repo.get(id) ?: return@DetailActions
-            startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, Export.summaryText(l)), "Compartir resumen"))
+            ext { startActivity(Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, Export.summaryText(l)), "Compartir resumen")) }
         },
         onExportPdf = {
             val l = vm.repo.get(id) ?: return@DetailActions
             lifecycleScope.launch {
                 try {
                     val uri = kotlinx.coroutines.withContext(kotlinx.coroutines.Dispatchers.IO) { Export.pdf(this@MainActivity, l) }
-                    startActivity(
+                    ext { startActivity(
                         Intent.createChooser(
                             Intent(Intent.ACTION_SEND).setType("application/pdf").putExtra(Intent.EXTRA_STREAM, uri).addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION),
                             "Exportar PDF",
                         ),
-                    )
+                    ) }
                 } catch (e: Exception) {
                     vm.toast("No se pudo crear el PDF.")
                 }
@@ -318,6 +324,19 @@ class MainActivity : FragmentActivity() {
             if (Build.VERSION.SDK_INT >= 33 && !Reminders.canNotify(this)) notifRequest()
         },
         onChangeReceived = { vm.changeReceived(id, it) },
+        onReport = {
+            val l = vm.repo.get(id) ?: return@DetailActions
+            val body = "Versión ${BuildConfig.VERSION_NAME}, análisis: ${l.analysis.source}, tipo: ${l.analysis.docType ?: "?"}.\n" +
+                "Cuéntanos qué está mal (no hace falta que incluyas datos personales):\n\n"
+            val intent = if (BuildConfig.SUPPORT_EMAIL.isNotBlank()) {
+                Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:" + BuildConfig.SUPPORT_EMAIL))
+                    .putExtra(Intent.EXTRA_SUBJECT, "Descifra: resumen incorrecto")
+                    .putExtra(Intent.EXTRA_TEXT, body)
+            } else {
+                Intent.createChooser(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, body), "Avisar de un error")
+            }
+            try { ext { startActivity(intent) } } catch (e: Exception) { vm.toast("No hay ninguna app de correo.") }
+        },
         onCopyDraft = { vm.repo.get(id)?.draft?.let { copy(it, "Borrador copiado") } },
     )
 

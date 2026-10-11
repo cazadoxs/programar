@@ -105,18 +105,19 @@ class MainViewModel(app: Application) : AndroidViewModel(app) {
     fun lockNow() = _ui.update { it.copy(locked = repo.settings.value.lockWithBiometrics) }
 
     // --- getting text in ----------------------------------------------------------------
-    fun onScanned(uris: List<Uri>) = viewModelScope.launch {
+    /** [ownTempFiles]: true only for the scanner's own output; never delete files the user picked or shared. */
+    fun onScanned(uris: List<Uri>, ownTempFiles: Boolean = true) = viewModelScope.launch {
         _ui.update { it.copy(busy = "Leyendo la carta en tu móvil…") }
         try {
             val text = Ocr.read(getApplication(), uris)
-            deleteTemp(uris)
+            if (ownTempFiles) deleteTemp(uris)
             beginReview(text, uris.size)
         } catch (e: Exception) {
             _ui.update { it.copy(busy = null, message = "No se pudo leer la imagen. Prueba con más luz o pega el texto.") }
         }
     }
 
-    fun onImage(uri: Uri) = onScanned(listOf(uri))
+    fun onImage(uri: Uri) = onScanned(listOf(uri), ownTempFiles = false)
 
     fun onPdf(uri: Uri) = viewModelScope.launch {
         _ui.update { it.copy(busy = "Leyendo el PDF en tu móvil…") }

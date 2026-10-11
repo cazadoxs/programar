@@ -84,13 +84,6 @@ class ClaudeClient(apiKey: String, private val model: String) : LlmClient {
             .system(system)
             .addUserMessage(user)
             .outputConfig(output.build())
-            .apply {
-                // Server-side fallback when a safety classifier declines (Opus/Sonnet/Fable only).
-                if (!model.contains("haiku")) {
-                    putAdditionalHeader("anthropic-beta", "server-side-fallback-2026-07-01")
-                    putAdditionalBodyProperty("fallbacks", JsonValue.from("default"))
-                }
-            }
             .build()
 
         val message = try {

@@ -55,9 +55,9 @@ private val Dark = Palette(
 val LocalPalette = staticCompositionLocalOf { Light }
 
 val Serif = FontFamily(
-    Font(R.font.fraunces, FontWeight.Normal, variationSettings = FontVariation.Settings(FontVariation.weight(400), FontVariation.opticalSizing(30.sp))),
-    Font(R.font.fraunces, FontWeight.SemiBold, variationSettings = FontVariation.Settings(FontVariation.weight(600), FontVariation.opticalSizing(48.sp))),
-    Font(R.font.fraunces, FontWeight.Bold, variationSettings = FontVariation.Settings(FontVariation.weight(750), FontVariation.opticalSizing(72.sp))),
+    Font(R.font.fraunces, FontWeight.Normal, variationSettings = FontVariation.Settings(FontVariation.weight(400), FontVariation.opticalSizing(30.sp), FontVariation.Setting("WONK", 0f), FontVariation.Setting("SOFT", 0f))),
+    Font(R.font.fraunces, FontWeight.SemiBold, variationSettings = FontVariation.Settings(FontVariation.weight(600), FontVariation.opticalSizing(48.sp), FontVariation.Setting("WONK", 0f), FontVariation.Setting("SOFT", 0f))),
+    Font(R.font.fraunces, FontWeight.Bold, variationSettings = FontVariation.Settings(FontVariation.weight(750), FontVariation.opticalSizing(72.sp), FontVariation.Setting("WONK", 0f), FontVariation.Setting("SOFT", 0f))),
 )
 
 /** Atkinson Hyperlegible: designed for low-vision readers, ideal for dense official text. */

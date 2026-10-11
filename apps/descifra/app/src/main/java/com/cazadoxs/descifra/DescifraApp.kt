@@ -27,6 +27,8 @@ class DescifraApp : Application() {
         billing = Billing(this, vault)
         nano = OnDeviceAi()
         engine = Engine(repository, nano)
+        // PDF exports are temporary: remove leftovers from earlier sessions.
+        runCatching { java.io.File(cacheDir, "exports").deleteRecursively() }
         Reminders.ensureChannel(this)
         Reminders.schedule(this, repository.settings.value.reminderHour)
     }
