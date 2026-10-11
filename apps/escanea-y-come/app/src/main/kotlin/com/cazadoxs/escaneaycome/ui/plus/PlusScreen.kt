@@ -1,6 +1,6 @@
 package com.cazadoxs.escaneaycome.ui.plus
 
-import android.app.Activity
+import androidx.activity.compose.LocalActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -29,7 +29,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.cazadoxs.escaneaycome.billing.PlusState
@@ -57,7 +56,7 @@ private val PLUS = listOf(
 fun PlusScreen(onBack: () -> Unit) {
     val billing = container().billing
     val state by billing.state.collectAsStateWithLifecycle()
-    val activity = LocalContext.current as? Activity
+    val activity = LocalActivity.current
 
     Scaffold(
         topBar = {
