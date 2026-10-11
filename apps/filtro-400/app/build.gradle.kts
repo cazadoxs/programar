@@ -101,6 +101,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.navigation.compose)
+    // Lint exige Fragment >= 1.3 para registerForActivityResult.
+    implementation(libs.androidx.fragment)
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.androidx.work.runtime)
     implementation(libs.billing.ktx)
