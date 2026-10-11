@@ -96,6 +96,8 @@ data class Reminder(
 
 data class LauncherConfig(
     val tiles: List<Tile>,
+    /** Nombre de la persona mayor, para el saludo ("Buenos días, Carmen"). */
+    val ownerName: String = "",
     val sosName: String = "",
     val sosPhone: String = "",
     val sos2Name: String = "",
@@ -110,8 +112,6 @@ data class LauncherConfig(
     val reminders: List<Reminder> = emptyList(),
     val pinSalt: String = "",
     val pinHash: String = "",
-    /** Compartir batería y actividad con la familia (se puede apagar desde el móvil mayor). */
-    val shareStatus: Boolean = true,
     val inactivityHours: Int = 12,
     val rev: Long = 0,
     val updatedAt: Long = 0,
@@ -122,6 +122,7 @@ data class LauncherConfig(
     fun toJson(): JSONObject = JSONObject()
         .put("v", 1)
         .put("tiles", JSONArray().apply { tiles.forEach { put(it.toJson()) } })
+        .put("ownerName", ownerName)
         .put("sosName", sosName).put("sosPhone", sosPhone)
         .put("sos2Name", sos2Name).put("sos2Phone", sos2Phone)
         .put("theme", theme).put("textScale", textScale.toDouble())
@@ -130,7 +131,7 @@ data class LauncherConfig(
         .put("allowedApps", JSONArray(allowedApps))
         .put("reminders", JSONArray().apply { reminders.forEach { put(it.toJson()) } })
         .put("pinSalt", pinSalt).put("pinHash", pinHash)
-        .put("shareStatus", shareStatus).put("inactivityHours", inactivityHours)
+        .put("inactivityHours", inactivityHours)
         .put("rev", rev).put("updatedAt", updatedAt).put("updatedBy", updatedBy)
 
     fun bumped(by: String, now: Long = System.currentTimeMillis()) =
@@ -182,6 +183,7 @@ data class LauncherConfig(
             val pinOk = salt.length in 16..64 && hash.length in 32..128 && Validate.isBase64(salt) && Validate.isBase64(hash)
             return LauncherConfig(
                 tiles = tiles.distinctBy { it.id },
+                ownerName = Validate.text(o.optString("ownerName"), 30),
                 sosName = Validate.text(o.optString("sosName"), 30),
                 sosPhone = Phone.clean(o.optString("sosPhone")),
                 sos2Name = Validate.text(o.optString("sos2Name"), 30),
@@ -195,7 +197,6 @@ data class LauncherConfig(
                 reminders = reminders.distinctBy { it.id },
                 pinSalt = if (pinOk) salt else "",
                 pinHash = if (pinOk) hash else "",
-                shareStatus = o.optBoolean("shareStatus", true),
                 inactivityHours = o.optInt("inactivityHours", 12).coerceIn(2, 72),
                 rev = o.optLong("rev", 0).coerceAtLeast(0),
                 updatedAt = o.optLong("updatedAt", 0),

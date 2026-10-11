@@ -10,11 +10,13 @@ data class DeviceStatus(
     val charging: Boolean = false,
     val lastActive: Long = 0,
     val lastSeen: Long = 0,
+    /** Última vez que se pulsó el botón de ayuda. */
+    val lastSos: Long = 0,
     /** id de recordatorio -> momento en que se marcó como hecho. */
     val remindersDone: Map<String, Long> = emptyMap(),
 )
 
-enum class AlertKind { LOW_BATTERY, INACTIVE, REMINDER_MISSED, OFFLINE }
+enum class AlertKind { SOS, LOW_BATTERY, INACTIVE, REMINDER_MISSED, OFFLINE }
 
 data class Alert(val kind: AlertKind, val key: String, val text: String)
 
@@ -33,6 +35,9 @@ object Alerts {
         val out = mutableListOf<Alert>()
         if (status.lastSeen == 0L) return out
         val hour = 3_600_000L
+        if (status.lastSos > 0 && now - status.lastSos < 2 * hour) {
+            out += Alert(AlertKind.SOS, "sos_${status.lastSos}", "$name ha pulsado el botón de AYUDA")
+        }
         if (status.battery in 0..LOW_BATTERY && !status.charging) {
             out += Alert(AlertKind.LOW_BATTERY, "bat", "A $name le queda un ${status.battery} % de batería")
         }

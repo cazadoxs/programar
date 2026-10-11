@@ -1,0 +1,10 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Casa con corazón: "tu casa, tu gente, sin complicaciones". -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M54,25.5c1.1,0 2.1,0.4 2.9,1.1l26.4,23.2c1.8,1.6 0.7,4.6 -1.7,4.6H79v23.1c0,2.8 -2.2,5 -5,5H34c-2.8,0 -5,-2.2 -5,-5V54.4h-2.6c-2.4,0 -3.5,-3 -1.7,-4.6L51.1,26.6C51.9,25.9 52.9,25.5 54,25.5z"/>
+    <group android:translateX="41" android:translateY="52" android:scaleX="1.083" android:scaleY="1.083">
+        <path android:fillColor="#FFC2410C"
+            android:pathData="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z"/>
+    </group>
+</vector>

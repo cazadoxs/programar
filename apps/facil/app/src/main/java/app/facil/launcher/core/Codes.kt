@@ -4,7 +4,7 @@ import java.security.SecureRandom
 
 /**
  * Códigos de emparejamiento. 10 caracteres de un alfabeto sin letras
- * confusas (31^10 ≈ 8·10^14 combinaciones), caducan a los 15 minutos y
+ * confusas (32^10 ≈ 10^15 combinaciones), caducan a los 15 minutos y
  * además cada familiar tiene que ser aprobado en el móvil de la persona
  * mayor, así que adivinar un código no da acceso a nada.
  */
@@ -23,7 +23,6 @@ object Codes {
         var s = input.trim().uppercase()
         if (s.startsWith(QR_PREFIX)) s = s.removePrefix(QR_PREFIX)
         s = s.filter { it.isLetterOrDigit() }
-            .replace('O', '0').replace('I', '1')
         if (s.length != LENGTH || s.any { it !in ALPHABET }) return null
         return s
     }

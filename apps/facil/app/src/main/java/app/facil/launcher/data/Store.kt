@@ -40,6 +40,23 @@ class Store private constructor(ctx: Context) {
     fun addListener(l: () -> Unit) { listeners += l }
     fun removeListener(l: () -> Unit) { listeners -= l }
 
+    /**
+     * Compartir batería y actividad con la familia. Es decisión de la persona
+     * mayor: vive solo en su móvil y la familia no puede cambiarlo a distancia.
+     */
+    var shareStatus: Boolean
+        get() = p.getBoolean("share", true)
+        set(v) = p.edit().putBoolean("share", v).apply()
+
+    var askedCallPermission: Boolean
+        get() = p.getBoolean("askedCall", false)
+        set(v) = p.edit().putBoolean("askedCall", v).apply()
+
+    /** Última vez que se pulsó el botón de ayuda (se comparte con la familia). */
+    var lastSos: Long
+        get() = p.getLong("lastSos", 0)
+        set(v) = p.edit().putLong("lastSos", v).apply()
+
     // --- PIN: intentos fallidos ---
     var pinFailures: Int
         get() = p.getInt("pinFailures", 0)
