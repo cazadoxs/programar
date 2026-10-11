@@ -1,0 +1,140 @@
+rules_version = '2';
+
+// Modelo de seguridad de A medias
+// - Cada dispositivo usa una sesión anónima de Firebase Auth.
+// - Solo los miembros (groups/{g}/members/{uid}) leen o escriben un grupo.
+// - Para hacerse miembro hay que presentar el secreto de una invitación que
+//   exista (groups/{g}/invites/{secreto}); nadie puede listar invitaciones
+//   de un grupo al que no pertenece.
+// - Todos los documentos se validan (campos permitidos, tipos y tamaños)
+//   con los mismos límites que la app (lib/core/models.dart, Limits).
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function groupPath(g) {
+      return /databases/$(database)/documents/groups/$(g);
+    }
+
+    function isMember(g) {
+      return signedIn() &&
+        exists(/databases/$(database)/documents/groups/$(g)/members/$(request.auth.uid));
+    }
+
+    function isShortString(v, min, max) {
+      return v is string && v.size() >= min && v.size() <= max;
+    }
+
+    function validPeople(people) {
+      return people is list && people.size() >= 1 && people.size() <= 50;
+    }
+
+    function validGroup(d, g) {
+      return d.keys().hasOnly(['id', 'name', 'currency', 'emoji', 'people',
+                               'createdAt', 'updatedAt', 'ownerUid', 'archived']) &&
+        d.keys().hasAll(['id', 'name', 'currency', 'people', 'ownerUid']) &&
+        d.id == g &&
+        isShortString(d.name, 1, 60) &&
+        isShortString(d.currency, 3, 3) &&
+        (!('emoji' in d) || isShortString(d.emoji, 0, 16)) &&
+        validPeople(d.people) &&
+        (!('createdAt' in d) || d.createdAt is int) &&
+        (!('updatedAt' in d) || d.updatedAt is int) &&
+        (!('archived' in d) || d.archived is bool) &&
+        d.ownerUid is string;
+    }
+
+    function validExpense(d, e) {
+      return d.keys().hasOnly(['id', 'title', 'amountMinor', 'currency', 'rate',
+                               'payerId', 'splitMode', 'split', 'category', 'date',
+                               'createdAt', 'updatedAt', 'note', 'isTransfer']) &&
+        d.keys().hasAll(['id', 'amountMinor', 'currency', 'rate', 'payerId',
+                         'splitMode', 'split']) &&
+        d.id == e &&
+        (!('title' in d) || isShortString(d.title, 0, 80)) &&
+        d.amountMinor is int && d.amountMinor > 0 && d.amountMinor <= 10000000000 &&
+        isShortString(d.currency, 3, 3) &&
+        d.rate is number && d.rate > 0 && d.rate <= 100000 &&
+        isShortString(d.payerId, 1, 40) &&
+        d.splitMode in ['equal', 'exact', 'percent', 'shares'] &&
+        d.split is map && d.split.size() >= 1 && d.split.size() <= 50 &&
+        (!('category' in d) || isShortString(d.category, 0, 20)) &&
+        (!('date' in d) || d.date is int) &&
+        (!('createdAt' in d) || d.createdAt is int) &&
+        (!('updatedAt' in d) || d.updatedAt is int) &&
+        (!('note' in d) || isShortString(d.note, 0, 500)) &&
+        (!('isTransfer' in d) || d.isTransfer is bool);
+    }
+
+    match /groups/{g} {
+      allow get: if isMember(g);
+      allow list: if false;
+
+      // Crear: quien crea queda como propietario (y en el mismo lote crea su
+      // documento de miembro y la primera invitación).
+      allow create: if signedIn() &&
+        request.resource.data.ownerUid == request.auth.uid &&
+        validGroup(request.resource.data, g);
+
+      // Editar: cualquier miembro, sin cambiar propietario ni id.
+      allow update: if isMember(g) &&
+        validGroup(request.resource.data, g) &&
+        request.resource.data.ownerUid == resource.data.ownerUid &&
+        request.resource.data.id == resource.data.id;
+
+      // Los grupos no se borran desde la app (se archivan o se abandonan).
+      allow delete: if false;
+
+      match /members/{uid} {
+        // Cada uno ve su propia membresía; los miembros ven quién hay.
+        allow get, list: if isMember(g);
+
+        // Unirse: solo uno mismo y solo con una invitación que exista.
+        allow create: if signedIn() &&
+          request.auth.uid == uid &&
+          request.resource.data.keys().hasOnly(['invite', 'joinedAt']) &&
+          request.resource.data.invite is string &&
+          request.resource.data.invite.size() >= 8 &&
+          request.resource.data.invite.size() <= 40 &&
+          request.resource.data.joinedAt is int &&
+          existsAfter(/databases/$(database)/documents/groups/$(g)/invites/$(request.resource.data.invite));
+
+        allow update: if false;
+
+        // Salir del grupo.
+        allow delete: if signedIn() && request.auth.uid == uid;
+      }
+
+      match /invites/{secret} {
+        // Nadie lista invitaciones; los miembros pueden comprobar la suya.
+        allow get: if isMember(g);
+        allow list: if false;
+
+        // Crear: un miembro, o el propietario en el lote que crea el grupo.
+        allow create: if signedIn() &&
+          secret.size() >= 16 && secret.size() <= 40 &&
+          request.resource.data.keys().hasOnly(['createdBy', 'createdAt']) &&
+          request.resource.data.createdBy == request.auth.uid &&
+          request.resource.data.createdAt is int &&
+          (isMember(g) || getAfter(groupPath(g)).data.ownerUid == request.auth.uid);
+
+        allow update: if false;
+        allow delete: if isMember(g);
+      }
+
+      match /expenses/{e} {
+        allow get, list: if isMember(g);
+        allow create, update: if isMember(g) && validExpense(request.resource.data, e);
+        allow delete: if isMember(g);
+      }
+    }
+
+    // Todo lo demás, cerrado.
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
