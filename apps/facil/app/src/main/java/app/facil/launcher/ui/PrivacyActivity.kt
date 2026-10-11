@@ -49,5 +49,5 @@ class PrivacyActivity : BaseActivity() {
         }
     }
 
-    companion object { const val POLICY_URL = "https://cazadoxs.github.io/programar/facil/privacidad.html" }
+    companion object { const val POLICY_URL = "https://github.com/cazadoxs/programar/blob/claude/facil-cv6diq/apps/facil/publicar/PRIVACIDAD.md" }
 }
