@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp" android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Capsule at -40 degrees: coral half and cream half -->
+    <group android:pivotX="54" android:pivotY="54" android:rotation="-40">
+        <path android:fillColor="#FFFFFDF8"
+            android:pathData="M30,40 L54,40 L54,68 L30,68 A14,14 0 0 1 30,40 Z" />
+        <path android:fillColor="#FFE36A4A"
+            android:pathData="M54,40 L78,40 A14,14 0 0 1 78,68 L54,68 Z" />
+        <path android:fillColor="#33FFFFFF"
+            android:pathData="M36,45 L72,45 L72,49 L36,49 Z" />
+    </group>
+    <!-- Little check mark -->
+    <path android:strokeColor="#FF1F5E55" android:strokeWidth="4.5" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M46,56 L52,62 L63,50" />
+</vector>

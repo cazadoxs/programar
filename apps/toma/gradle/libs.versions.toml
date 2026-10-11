@@ -13,6 +13,7 @@ room = "2.7.1"
 work = "2.10.1"
 billing = "8.0.0"
 junit = "4.13.2"
+zxing = "3.5.3"
 
 [libraries]
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "coroutines" }
@@ -32,7 +33,8 @@ room-runtime = { module = "androidx.room:room-runtime", version.ref = "room" }
 room-ktx = { module = "androidx.room:room-ktx", version.ref = "room" }
 room-compiler = { module = "androidx.room:room-compiler", version.ref = "room" }
 work-runtime = { module = "androidx.work:work-runtime-ktx", version.ref = "work" }
-billing = { module = "com.android.billingclient:billing-ktx", version.ref = "billing" }
+billing = { module = "com.android.billingclient:billing", version.ref = "billing" }
+zxing-core = { module = "com.google.zxing:core", version.ref = "zxing" }
 junit = { module = "junit:junit", version.ref = "junit" }
 
 [plugins]

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="toma_paper">#FF0F1D1A</color>
+    <color name="toma_card">#FF182B27</color>
+    <color name="toma_green">#FF86D4C2</color>
+    <color name="toma_ink">#FFE9EFEC</color>
+    <color name="toma_ink_soft">#FFA9B8B3</color>
+    <color name="toma_coral">#FFFF8D6E</color>
+</resources>

@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Toma</string>
+    <string name="back">Atrás</string>
+    <string name="save">Guardar</string>
+    <string name="cancel">Cancelar</string>
+    <string name="delete">Eliminar</string>
+    <string name="done">Hecho</string>
+    <string name="next">Siguiente</string>
+    <string name="skip">Saltar</string>
+    <string name="ok">Vale</string>
+    <string name="more">Más</string>
+
+    <!-- Channels / notifications -->
+    <string name="channel_alarm">Alarma de tomas</string>
+    <string name="channel_alarm_desc">Suena hasta que confirmas la toma</string>
+    <string name="channel_refill">Reposición</string>
+    <string name="channel_refill_desc">Avisa cuando queda poco medicamento</string>
+    <string name="channel_info">Avisos</string>
+    <string name="alarm_title_self">Es hora de tu medicación</string>
+    <string name="alarm_title_for">Es hora de la medicación de %1$s</string>
+    <string name="alarm_title_private">Toma: es hora de una toma</string>
+    <string name="action_taken_all">Ya la tomé</string>
+    <string name="action_snooze">Posponer</string>
+    <string name="med_with_dose">%1$s (%2$s)</string>
+    <string name="refill_title">Queda poco de %1$s</string>
+    <string name="refill_empty">Se ha acabado. Repón antes de la próxima toma.</string>
+    <string name="refill_low">Revisa cuánto te queda y repón.</string>
+    <plurals name="refill_days_left">
+        <item quantity="one">Te queda para %d día.</item>
+        <item quantity="other">Te queda para %d días.</item>
+    </plurals>
+
+    <!-- Caregiver -->
+    <string name="caregiver_push_title">%1$s no ha confirmado una toma</string>
+    <string name="caregiver_push_body">Toma de las %1$s sin confirmar.</string>
+    <string name="caregiver_push_body_meds">Toma de las %1$s sin confirmar: %2$s.</string>
+    <string name="caregiver_test_title">Prueba de Toma</string>
+    <string name="caregiver_test_body">Si lees esto, los avisos del cuidador funcionan.</string>
+
+    <!-- Widget -->
+    <string name="widget_name">Próxima toma</string>
+    <string name="widget_description">Muestra qué toca tomar y cuándo</string>
+    <string name="widget_nothing">Nada pendiente</string>
+    <string name="widget_next_at">a las %1$s</string>
+    <string name="widget_plus_needed">Widget de Toma Plus</string>
+
+    <!-- Palettes -->
+    <string name="palette_botica">Botica</string>
+    <string name="palette_contrast">Alto contraste</string>
+    <string name="palette_lavender">Lavanda</string>
+    <string name="palette_sea">Mar</string>
+    <string name="palette_terracotta">Terracota</string>
+    <string name="palette_forest">Bosque</string>
+
+    <!-- Schedule -->
+    <string name="sched_daily">Todos los días</string>
+    <string name="sched_weekdays">Días concretos</string>
+    <string name="sched_every_n">Cada varios días</string>
+    <string name="sched_interval">Cada X horas</string>
+    <string name="sched_as_needed">Solo cuando lo necesito</string>
+    <string name="sched_daily_desc">Cada día a las %1$s</string>
+    <string name="sched_weekdays_desc">%1$s a las %2$s</string>
+    <string name="sched_every_n_desc">Cada %1$d días a las %2$s</string>
+    <string name="sched_interval_desc">Cada %1$d h desde las %2$s</string>
+
+    <!-- Instructions & forms -->
+    <string name="instr_none">Sin indicación</string>
+    <string name="instr_with_food">Con comida</string>
+    <string name="instr_empty_stomach">En ayunas</string>
+    <string name="instr_before_meal">Antes de comer</string>
+    <string name="instr_after_meal">Después de comer</string>
+    <string name="instr_bedtime">Al acostarse</string>
+    <string name="instr_with_water">Con un vaso de agua</string>
+    <string name="form_pill">Comprimido</string>
+    <string name="form_capsule">Cápsula</string>
+    <string name="form_liquid">Líquido</string>
+    <string name="form_drops">Gotas</string>
+    <string name="form_injection">Inyección</string>
+    <string name="form_inhaler">Inhalador</string>
+    <string name="form_cream">Crema</string>
+    <string name="form_patch">Parche</string>
+    <string name="form_sachet">Sobre</string>
+    <string name="form_other">Otro</string>
+
+    <!-- Status -->
+    <string name="status_taken">Tomada</string>
+    <string name="status_skipped">Omitida</string>
+    <string name="status_missed">No tomada</string>
+    <string name="status_upcoming">Pendiente</string>
+    <string name="status_due">Ahora</string>
+
+    <!-- PDF -->
+    <string name="pdf_title">Informe de medicación</string>
+    <string name="pdf_subtitle">%1$s · del %2$s al %3$s</string>
+    <string name="pdf_section_meds">Medicación actual</string>
+    <string name="pdf_section_adherence">Cumplimiento (últimos %1$d días)</string>
+    <string name="pdf_section_log">Registro de tomas</string>
+    <string name="pdf_none">Sin datos.</string>
+    <string name="pdf_stock">Quedan %1$s unidades</string>
+    <string name="pdf_stock_days">Quedan %1$s unidades (≈ %2$d días)</string>
+    <string name="pdf_paused">En pausa</string>
+    <string name="pdf_no_expected">No había tomas programadas en este periodo.</string>
+    <string name="pdf_adherence_line">%1$d %% de las tomas confirmadas: %2$d de %3$d. Omitidas: %4$d. No tomadas: %5$d.</string>
+    <string name="pdf_disclaimer">Generado por Toma a partir de lo que anotó el usuario. No sustituye el consejo médico.</string>
+    <string name="pdf_page">Pág. %1$d</string>
+
+    <!-- Onboarding -->
+    <string name="onb_title_1">Tu medicación, sin límites</string>
+    <string name="onb_body_1">Todos los medicamentos que necesites, gratis y para siempre. Sin cuenta, sin anuncios.</string>
+    <string name="onb_title_2">Una alarma que insiste</string>
+    <string name="onb_body_2">Suena hasta que confirmas la toma. Para eso Toma necesita permiso para avisarte y para programar alarmas exactas.</string>
+    <string name="onb_title_3">Solo en tu móvil</string>
+    <string name="onb_body_3">Tus datos no salen del teléfono. Puedes llevarlos a un PDF para el médico o a una copia cifrada.</string>
+    <string name="onb_disclaimer">Toma es un recordatorio. No da consejos médicos ni de dosis, y no sustituye a tu médico o farmacéutico.</string>
+    <string name="onb_start">Empezar</string>
+    <string name="onb_your_name">¿Cómo te llamas?</string>
+    <string name="onb_name_hint">Tu nombre</string>
+    <string name="onb_default_name">Yo</string>
+
+    <!-- Permissions -->
+    <string name="perm_notifications_title">Permitir notificaciones</string>
+    <string name="perm_notifications_body">Sin ellas la alarma no puede sonar.</string>
+    <string name="perm_exact_title">Permitir alarmas exactas</string>
+    <string name="perm_exact_body">Sin este permiso las tomas pueden retrasarse varios minutos.</string>
+    <string name="perm_fullscreen_title">Mostrar la alarma a pantalla completa</string>
+    <string name="perm_fullscreen_body">Para ver la toma aunque el móvil esté bloqueado.</string>
+    <string name="perm_battery_title">Que el móvil no apague Toma</string>
+    <string name="perm_battery_body">Algunos móviles (Xiaomi, Huawei, Samsung, Oppo…) cierran apps para ahorrar batería. Sigue la guía.</string>
+    <string name="perm_grant">Permitir</string>
+    <string name="perm_guide">Ver guía</string>
+    <string name="perm_all_ok">Todo listo para que las alarmas suenen</string>
+
+    <!-- Today -->
+    <string name="tab_today">Hoy</string>
+    <string name="tab_meds">Medicinas</string>
+    <string name="tab_history">Historial</string>
+    <string name="tab_settings">Ajustes</string>
+    <string name="today_empty_title">Aún no has añadido nada</string>
+    <string name="today_empty_body">Añade tu primer medicamento y Toma se encarga de recordártelo.</string>
+    <string name="today_add_med">Añadir medicamento</string>
+    <string name="today_nothing_today">Hoy no tienes tomas</string>
+    <string name="today_all_done">¡Todo tomado por hoy!</string>
+    <string name="today_progress">%1$d de %2$d tomas</string>
+    <string name="today_blister_desc">%1$d de %2$d tomas de hoy confirmadas</string>
+    <string name="today_next">Próxima: %1$s a las %2$s</string>
+    <string name="today_streak">Racha de %1$d días</string>
+    <string name="today_as_needed">Cuando lo necesites</string>
+    <string name="today_all_profiles">Todos</string>
+    <string name="dose_take">Tomar</string>
+    <string name="dose_skip">Omitir</string>
+    <string name="dose_undo">Deshacer</string>
+    <string name="dose_taken_at">Tomada a las %1$s</string>
+    <string name="dose_log_now">Anotar toma</string>
+    <string name="dose_late_hint">Retrasada</string>
+
+    <!-- Medications -->
+    <string name="meds_title">Medicinas</string>
+    <string name="meds_paused">En pausa</string>
+    <string name="med_new">Nuevo medicamento</string>
+    <string name="med_edit">Editar medicamento</string>
+    <string name="med_name">Nombre</string>
+    <string name="med_name_hint">Por ejemplo, Ibuprofeno</string>
+    <string name="med_dose_label">Qué tomas cada vez</string>
+    <string name="med_dose_hint">1 comprimido de 600 mg</string>
+    <string name="med_form">Forma</string>
+    <string name="med_color">Color</string>
+    <string name="med_schedule">Cuándo</string>
+    <string name="med_times">Horas</string>
+    <string name="med_add_time">Añadir hora</string>
+    <string name="med_start_time">Primera toma</string>
+    <string name="med_every_days">Cada cuántos días</string>
+    <string name="med_every_hours">Cada cuántas horas</string>
+    <string name="med_amount">Cantidad</string>
+    <string name="med_units_per_dose">unidades por toma</string>
+    <string name="med_start_date">Empieza</string>
+    <string name="med_end_date">Termina</string>
+    <string name="med_no_end">Sin fecha de fin</string>
+    <string name="med_instruction">Indicación</string>
+    <string name="med_notes">Notas</string>
+    <string name="med_track_stock">Controlar existencias</string>
+    <string name="med_stock">Unidades que te quedan</string>
+    <string name="med_stock_warn">Avisar con unos días de margen</string>
+    <string name="med_stock_days">%1$d días</string>
+    <string name="med_stock_left">Quedan %1$s (≈ %2$d días)</string>
+    <string name="med_stock_left_nodays">Quedan %1$s</string>
+    <string name="med_pause">Pausar</string>
+    <string name="med_resume">Reanudar</string>
+    <string name="med_delete_title">¿Eliminar este medicamento?</string>
+    <string name="med_delete_body">Se borrará también su historial. No se puede deshacer.</string>
+    <string name="med_for_whom">Para quién</string>
+    <string name="med_error_name">Escribe el nombre</string>
+    <string name="med_error_times">Añade al menos una hora</string>
+    <string name="med_error_weekdays">Elige al menos un día</string>
+    <string name="med_error_dates">La fecha de fin es anterior al inicio</string>
+    <string name="med_refill_now">Repuse</string>
+    <string name="med_refill_add">Unidades repuestas</string>
+    <string name="med_take_now">Tomar ahora</string>
+    <string name="med_next">Siguiente: %1$s</string>
+    <string name="med_none">Aún no hay medicamentos</string>
+    <string name="med_no_advice">Escribe lo que te haya indicado tu médico. Toma nunca sugiere dosis.</string>
+
+    <!-- History -->
+    <string name="history_title">Historial</string>
+    <string name="history_adherence">Cumplimiento</string>
+    <string name="history_days">Últimos %1$d días</string>
+    <string name="history_taken">Tomadas</string>
+    <string name="history_missed">No tomadas</string>
+    <string name="history_skipped">Omitidas</string>
+    <string name="history_no_data">Aún no hay tomas que contar</string>
+    <string name="history_empty_day">Sin tomas este día</string>
+    <string name="history_export_pdf">Informe PDF para el médico</string>
+    <string name="history_export_csv">Exportar a hoja de cálculo (CSV)</string>
+    <string name="history_share_pdf">Compartir informe</string>
+    <string name="history_period">Periodo del informe</string>
+    <string name="history_period_days">%1$d días</string>
+    <string name="history_generating">Preparando el informe…</string>
+    <string name="history_error">No se pudo crear el informe</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="settings_profiles">Perfiles</string>
+    <string name="settings_profiles_sub">Tú, tus padres, tus hijos…</string>
+    <string name="settings_alarm">Alarma</string>
+    <string name="settings_repeat">Repetir cada</string>
+    <string name="settings_snooze">Posponer</string>
+    <string name="settings_grace">Dar por no tomada tras</string>
+    <string name="settings_minutes">%1$d min</string>
+    <string name="settings_permissions">Permisos y batería</string>
+    <string name="settings_caregiver">Modo cuidador</string>
+    <string name="settings_caregiver_sub">Avisa a otra persona si no confirmas una toma</string>
+    <string name="settings_backup">Copia de seguridad</string>
+    <string name="settings_backup_sub">Cifrada con una contraseña tuya</string>
+    <string name="settings_plus">Toma Plus</string>
+    <string name="settings_appearance">Aspecto</string>
+    <string name="settings_theme">Tema de color</string>
+    <string name="settings_large_text">Letra más grande</string>
+    <string name="settings_about">Acerca de</string>
+    <string name="settings_privacy">Política de privacidad</string>
+    <string name="settings_disclaimer_title">Aviso importante</string>
+    <string name="settings_disclaimer_body">Toma es una ayuda para recordar. No da consejo médico, no recomienda dosis ni comprueba interacciones y no sustituye a tu médico o farmacéutico. Ante cualquier duda, consúltales. En una emergencia, llama al 112.</string>
+    <string name="settings_version">Versión %1$s</string>
+    <string name="settings_free_note">Todo lo importante es gratis para siempre: medicamentos ilimitados, alarmas, perfiles, cuidador, PDF y copias manuales.</string>
+
+    <!-- Profiles -->
+    <string name="profile_new">Nuevo perfil</string>
+    <string name="profile_edit">Editar perfil</string>
+    <string name="profile_name">Nombre</string>
+    <string name="profile_delete_title">¿Eliminar el perfil %1$s?</string>
+    <string name="profile_delete_body">Se borrarán sus medicamentos y su historial.</string>
+    <string name="profile_last">Debe quedar al menos un perfil</string>
+
+    <!-- Caregiver screen -->
+    <string name="cg_title">Modo cuidador</string>
+    <string name="cg_intro">Si una toma sigue sin confirmarse pasado el tiempo de margen, Toma envía un aviso al móvil de la persona que cuida. No hace falta cuenta: se usa ntfy, una app gratuita y de código abierto.</string>
+    <string name="cg_enable">Avisar al cuidador</string>
+    <string name="cg_steps">Cómo configurarlo</string>
+    <string name="cg_step_1">1. La persona que cuida instala la app ntfy (Google Play o F-Droid).</string>
+    <string name="cg_step_2">2. En ntfy pulsa «+» y escribe el tema de abajo (o escanea el código QR).</string>
+    <string name="cg_step_3">3. Pulsa «Enviar prueba» para comprobar que llega.</string>
+    <string name="cg_topic">Tema secreto</string>
+    <string name="cg_topic_note">Cualquiera que conozca este tema puede leer los avisos. Compártelo solo con quien cuida y no lo publiques.</string>
+    <string name="cg_new_topic">Generar otro tema</string>
+    <string name="cg_server">Servidor ntfy</string>
+    <string name="cg_server_error">Debe empezar por https://</string>
+    <string name="cg_include_meds">Incluir el nombre de los medicamentos</string>
+    <string name="cg_include_meds_sub">Por defecto el aviso solo dice quién y a qué hora</string>
+    <string name="cg_send_test">Enviar prueba</string>
+    <string name="cg_test_sent">Prueba enviada</string>
+    <string name="cg_qr">Código QR para suscribirse</string>
+    <string name="cg_copy">Copiar</string>
+    <string name="cg_copied">Copiado</string>
+    <string name="cg_privacy">Al activarlo, los avisos pasan por el servidor indicado (ntfy.sh por defecto) y contienen el nombre del perfil y la hora.</string>
+
+    <!-- Backup screen -->
+    <string name="bk_title">Copia de seguridad</string>
+    <string name="bk_intro">Guarda todos tus datos en un archivo cifrado. Solo se abre con tu contraseña: si la pierdes, nadie puede recuperarlo, ni siquiera nosotros.</string>
+    <string name="bk_export">Crear copia</string>
+    <string name="bk_import">Restaurar copia</string>
+    <string name="bk_password">Contraseña</string>
+    <string name="bk_password_confirm">Repite la contraseña</string>
+    <string name="bk_password_short">Mínimo %1$d caracteres</string>
+    <string name="bk_password_mismatch">No coinciden</string>
+    <string name="bk_done_export">Copia guardada</string>
+    <string name="bk_done_import">Datos restaurados</string>
+    <string name="bk_wrong">Contraseña incorrecta o archivo dañado</string>
+    <string name="bk_not_backup">Ese archivo no es una copia de Toma</string>
+    <string name="bk_invalid">La copia no es válida</string>
+    <string name="bk_error">No se pudo completar la operación</string>
+    <string name="bk_restore_warn">Restaurar sustituye todo lo que hay ahora en la app.</string>
+    <string name="bk_auto">Copia automática semanal</string>
+    <string name="bk_auto_sub">Se guarda en la carpeta que elijas. Con Toma Plus.</string>
+    <string name="bk_auto_folder">Elegir carpeta</string>
+    <string name="bk_auto_last">Última: %1$s</string>
+    <string name="bk_auto_never">Aún no se ha hecho ninguna</string>
+
+    <!-- Plus -->
+    <string name="plus_title">Toma Plus</string>
+    <string name="plus_tagline">Un pago único. Sin suscripción.</string>
+    <string name="plus_free_title">Gratis para siempre</string>
+    <string name="plus_free_body">Medicamentos ilimitados, alarmas insistentes, perfiles familiares, modo cuidador, informe PDF, exportación CSV y copias manuales.</string>
+    <string name="plus_feat_themes">Temas de color: Lavanda, Mar, Terracota y Bosque</string>
+    <string name="plus_feat_widget">Widget de próxima toma en la pantalla de inicio</string>
+    <string name="plus_feat_backup">Copia de seguridad automática semanal cifrada</string>
+    <string name="plus_feat_support">Apoyas que Toma siga siendo gratis y sin anuncios</string>
+    <string name="plus_buy">Desbloquear por %1$s</string>
+    <string name="plus_buy_generic">Desbloquear Toma Plus</string>
+    <string name="plus_owned">Tienes Toma Plus. ¡Gracias!</string>
+    <string name="plus_pending">Tu pago está pendiente. Se activará solo al confirmarse.</string>
+    <string name="plus_unavailable">Google Play no está disponible ahora mismo</string>
+    <string name="plus_locked">Con Toma Plus</string>
+    <string name="plus_restore_note">Si ya lo compraste, se recupera solo al abrir la app con tu cuenta de Google.</string>
+
+    <!-- Battery guide -->
+    <string name="bat_title">Que las alarmas no fallen</string>
+    <string name="bat_intro">Algunos fabricantes cierran las apps en segundo plano y silencian sus alarmas. Haz estos pasos una sola vez.</string>
+    <string name="bat_generic">Ajustes del sistema → Batería → Toma → Sin restricciones.</string>
+    <string name="bat_xiaomi">Xiaomi, Redmi y POCO: Ajustes → Aplicaciones → Permisos → Inicio automático → activa Toma. Después, en Ajustes → Batería → Toma → «Sin restricciones». En Recientes, mantén pulsada la tarjeta de Toma y pulsa el candado.</string>
+    <string name="bat_samsung">Samsung: Ajustes → Batería → Límites de uso en segundo plano → quita Toma de «Apps en suspensión». Añádela a «Apps que nunca se suspenden».</string>
+    <string name="bat_huawei">Huawei y Honor: Ajustes → Aplicaciones → Inicio de aplicaciones → Toma → Gestionar manualmente → activa las tres opciones.</string>
+    <string name="bat_oppo">Oppo, Realme y OnePlus: Ajustes → Batería → Optimización de batería → Toma → No optimizar. Activa también «Permitir inicio automático».</string>
+    <string name="bat_open_battery">Abrir ajustes de batería</string>
+    <string name="bat_open_app">Abrir ajustes de Toma</string>
+    <string name="bat_dontkillmyapp">Más información para tu marca: dontkillmyapp.com</string>
+    <string name="bat_test">Probar alarma ahora</string>
+
+    <!-- Alarm screen -->
+    <string name="alarm_screen_title">Es hora de tomar</string>
+    <string name="alarm_take_all">Ya las tomé</string>
+    <string name="alarm_snooze_for">Posponer %1$d min</string>
+    <string name="alarm_skip_all">Omitir</string>
+    <string name="alarm_nothing">No hay nada pendiente</string>
+    <string name="alarm_close">Cerrar</string>
+    <string name="alarm_time_now">Toma de las %1$s</string>
+</resources>
