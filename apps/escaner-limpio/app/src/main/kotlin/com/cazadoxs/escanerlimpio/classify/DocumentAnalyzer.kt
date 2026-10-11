@@ -119,6 +119,9 @@ object DocumentAnalyzer {
     private val totalAmount = Regex(
         "(?:total|importe|liquido a percibir|a pagar|a percibir)[^0-9\\n]{0,30}?(-?\\d{1,3}(?:[.\\s]\\d{3})*,\\d{2}|-?\\d+[.,]\\d{2})(?!\\d)",
     )
+    private val netPay = Regex(
+        "liquido (?:total )?a percibir[^0-9\\n]{0,30}?(-?\\d{1,3}(?:[.\\s]\\d{3})*,\\d{2}|-?\\d+[.,]\\d{2})(?!\\d)",
+    )
     private val dniPattern = Regex("(?<![A-Z0-9])(\\d{8})[ -]?([A-Z])(?![A-Z0-9])")
     private val niePattern = Regex("(?<![A-Z0-9])([XYZ])[ -]?(\\d{7})[ -]?([A-Z])(?![A-Z0-9])")
     private const val DNI_LETTERS = "TRWAGMYFPDXBNJZSQVHLCKE"
@@ -140,7 +143,7 @@ object DocumentAnalyzer {
         val category = if (best != null && best.value >= 3.0) best.key else Category.OTROS
 
         val date = findDate(norm, category, today)
-        val amount = findAmount(norm)
+        val amount = findAmount(norm, category)
         val issuer = findIssuer(norm)
         val title = buildTitle(category, norm, date, issuer, hasDni, hasNie)
         return Analysis(category, title, date, amount, issuer)
@@ -203,11 +206,16 @@ object DocumentAnalyzer {
         return normalized.toDoubleOrNull()
     }
 
-    internal fun findAmount(norm: String): Double? =
-        totalAmount.findAll(norm)
+    internal fun findAmount(norm: String, category: Category = Category.OTROS): Double? {
+        // A payslip lists gross and net: the figure that matters is the net pay.
+        if (category == Category.NOMINAS) {
+            netPay.find(norm)?.let { m -> parseAmount(m.groupValues[1])?.takeIf { it > 0 }?.let { return it } }
+        }
+        return totalAmount.findAll(norm)
             .mapNotNull { parseAmount(it.groupValues[1]) }
             .filter { it > 0 && it < 1_000_000 }
             .maxOrNull()
+    }
 
     internal fun findIssuer(norm: String): String? =
         issuers.mapNotNull { (regex, name) -> regex.find(norm)?.let { it.range.first to name } }

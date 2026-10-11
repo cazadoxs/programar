@@ -21,6 +21,7 @@ object TextTools {
     /** A safe file name (no path separators or control characters), without extension. */
     fun safeFileName(title: String, fallback: String = "Documento"): String {
         val cleaned = title.replace(illegalFileChars, " ")
+            .replace(Regex("\\.{2,}"), " ")
             .replace(spaces, " ")
             .trim()
             .trimStart('.')
