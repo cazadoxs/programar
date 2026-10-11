@@ -26,6 +26,7 @@ import app.apunta.data.Recording
 import app.apunta.data.Source
 import app.apunta.data.Status
 import app.apunta.transcribe.TranscriptionService
+import app.apunta.util.TimeFormat
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -194,7 +195,7 @@ class RecorderService : Service() {
         return NotificationCompat.Builder(this, ApuntaApp.CH_RECORD)
             .setSmallIcon(R.drawable.ic_stat_mic)
             .setContentTitle(getString(if (paused) R.string.rec_paused else R.string.rec_recording))
-            .setContentText(app.apunta.util.TimeFormat.clock(elapsedMs))
+            .setContentText(TimeFormat.clock(elapsedMs))
             .setContentIntent(open)
             .setOngoing(true)
             .setOnlyAlertOnce(true)

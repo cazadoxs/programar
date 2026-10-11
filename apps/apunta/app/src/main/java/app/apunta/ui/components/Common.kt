@@ -73,22 +73,6 @@ fun highlighted(text: String, query: String): AnnotatedString {
     }
 }
 
-/** Ruled-notebook background lines behind lists. */
-@Composable
-fun Modifier.ruled(): Modifier {
-    val line = Apunta.colors.ruled
-    val margin = Apunta.colors.margin.copy(alpha = 0.35f)
-    return this.then(Modifier.drawBehindRuled(line, margin))
-}
-
-private fun Modifier.drawBehindRuled(line: Color, margin: Color): Modifier =
-    this.then(androidx.compose.ui.draw.drawBehind {
-        val step = 32.dp.toPx()
-        var y = step
-        while (y < size.height) { drawLine(line, Offset(0f, y), Offset(size.width, y), 1.dp.toPx()); y += step }
-        drawLine(margin, Offset(40.dp.toPx(), 0f), Offset(40.dp.toPx(), size.height), 1.5.dp.toPx())
-    })
-
 @Composable
 fun Chip(text: String, modifier: Modifier = Modifier, container: Color = MaterialTheme.colorScheme.surfaceContainerHigh, content: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Box(modifier.clip(RoundedCornerShape(50)).background(container).padding(horizontal = 10.dp, vertical = 4.dp)) {
