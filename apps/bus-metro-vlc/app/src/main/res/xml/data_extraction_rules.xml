@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Back up favourites and settings; skip the timetable database (it is re-downloaded). -->
+<!-- Back up only the favourites. Settings (which cache the Pro entitlement) are deliberately
+     excluded so a restored backup can never grant Pro on another account; Play re-confirms it. -->
 <data-extraction-rules>
     <cloud-backup>
         <include domain="database" path="user.db" />
-        <include domain="file" path="datastore/" />
     </cloud-backup>
     <device-transfer>
         <include domain="database" path="user.db" />
-        <include domain="file" path="datastore/" />
     </device-transfer>
 </data-extraction-rules>
