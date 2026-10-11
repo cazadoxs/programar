@@ -174,6 +174,7 @@ class HomeActivity : BaseActivity() {
 
     override fun onResume() {
         super.onResume()
+        if (!::clock.isInitialized) return
         store.lastActive = System.currentTimeMillis()
         store.addListener(configListener)
         Actions.torchListeners += torchListener

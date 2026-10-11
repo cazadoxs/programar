@@ -60,7 +60,7 @@ object Notifs {
             .setContentText("Son las ${r.timeText()}. Pulsa «Hecho» cuando lo hayas hecho.")
             .setCategory(Notification.CATEGORY_REMINDER)
             .setContentIntent(open(ctx, HomeActivity::class.java, id))
-            .addAction(Notification.Action.Builder(null, "Hecho", done).build())
+            .addAction(Notification.Action.Builder(0, "Hecho", done).build())
             .setAutoCancel(true)
             .build()
         ctx.svc<NotificationManager>().notify(id, n)

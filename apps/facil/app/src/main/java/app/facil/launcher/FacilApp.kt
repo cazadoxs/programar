@@ -18,10 +18,13 @@ class FacilApp : Application() {
         SyncJob.schedule(this)
         // Al desbloquear el móvil anotamos "última actividad". Solo la hora,
         // nada de qué se hace. Como somos el lanzador, el proceso suele estar vivo.
-        registerReceiver(object : BroadcastReceiver() {
+        val onUnlock = object : BroadcastReceiver() {
             override fun onReceive(c: Context, i: Intent) {
                 Store.get(c).lastActive = System.currentTimeMillis()
             }
-        }, IntentFilter(Intent.ACTION_USER_PRESENT))
+        }
+        val filter = IntentFilter(Intent.ACTION_USER_PRESENT)
+        if (android.os.Build.VERSION.SDK_INT >= 33) registerReceiver(onUnlock, filter, Context.RECEIVER_NOT_EXPORTED)
+        else registerReceiver(onUnlock, filter)
     }
 }

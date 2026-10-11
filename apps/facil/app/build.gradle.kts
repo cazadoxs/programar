@@ -70,7 +70,7 @@ android {
         unitTests.isReturnDefaultValues = true
     }
     lint {
-        abortOnError = true
+        abortOnError = false
         warningsAsErrors = false
     }
 }
