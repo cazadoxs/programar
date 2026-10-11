@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Filtro 400</string>
+    <string name="tile_label">Filtro 400</string>
+    <string name="channel_blocked">Llamadas filtradas</string>
+    <string name="channel_blocked_desc">Aviso discreto cuando Filtro 400 corta o silencia una llamada.</string>
+    <string name="channel_tips">Recordatorios</string>
+    <string name="channel_tips_desc">Recordatorios útiles, como apuntarte a la Lista Robinson.</string>
+</resources>

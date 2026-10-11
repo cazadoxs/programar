@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!--
+      Permisos mínimos. Filtro 400 NO pide contactos, registro de llamadas ni
+      estado del teléfono: el rol de "app de filtrado de llamadas" del sistema
+      basta para filtrar, y los contactos nunca se le pasan (siempre suenan).
+    -->
+    <!-- Solo para la lista de la comunidad (opcional) y las compras. -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Aviso discreto cuando se corta una llamada. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
+    <application
+        android:name=".Filtro400App"
+        android:allowBackup="false"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="false"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:supportsRtl="true"
+        android:localeConfig="@xml/locales_config"
+        android:theme="@style/Theme.Filtro400"
+        tools:targetApi="36">
+
+        <activity
+            android:name=".ui.MainActivity"
+            android:exported="true"
+            android:launchMode="singleTask"
+            android:windowSoftInputMode="adjustResize">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- Solo el sistema (Telecom) puede enlazarse: protegido por BIND_SCREENING_SERVICE. -->
+        <service
+            android:name=".screening.FiltroScreeningService"
+            android:exported="true"
+            android:permission="android.permission.BIND_SCREENING_SERVICE">
+            <intent-filter>
+                <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+
+        <!-- Interruptor rápido en el panel de ajustes rápidos. -->
+        <service
+            android:name=".tile.ShieldTileService"
+            android:exported="true"
+            android:icon="@drawable/ic_tile_shield"
+            android:label="@string/tile_label"
+            android:permission="android.permission.BIND_QUICK_SETTINGS_TILE">
+            <intent-filter>
+                <action android:name="android.service.quicksettings.action.QS_TILE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.quicksettings.TOGGLEABLE_TILE"
+                android:value="true" />
+        </service>
+
+        <receiver
+            android:name=".notify.NotificationActionReceiver"
+            android:exported="false" />
+
+    </application>
+</manifest>

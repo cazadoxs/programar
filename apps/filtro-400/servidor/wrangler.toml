@@ -1,0 +1,20 @@
+name = "filtro400-api"
+main = "src/index.ts"
+compatibility_date = "2025-06-01"
+
+[vars]
+PACKAGE_NAME = "com.cazadoxs.filtro400"
+PRODUCT_ID = "comunidad"
+# Denuncias de personas distintas necesarias para que un número entre en la lista.
+MIN_REPORTS = "3"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "filtro400"
+database_id = "PON_AQUI_EL_ID_QUE_TE_DA_WRANGLER"
+
+[triggers]
+crons = ["17 4 * * *"]
+
+# Secretos (no van aquí): wrangler secret put PEPPER
+#                         wrangler secret put GOOGLE_SERVICE_ACCOUNT
