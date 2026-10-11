@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shortcuts xmlns:android="http://schemas.android.com/apk/res/android">
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_record"
+        android:shortcutId="record"
+        android:shortcutShortLabel="@string/shortcut_record">
+        <intent
+            android:action="app.apunta.action.RECORD"
+            android:targetClass="app.apunta.MainActivity"
+            android:targetPackage="com.cazadoxs.apunta" />
+    </shortcut>
+    <shortcut
+        android:enabled="true"
+        android:icon="@drawable/ic_shortcut_search"
+        android:shortcutId="search"
+        android:shortcutShortLabel="@string/shortcut_search">
+        <intent
+            android:action="app.apunta.action.SEARCH"
+            android:targetClass="app.apunta.MainActivity"
+            android:targetPackage="com.cazadoxs.apunta" />
+    </shortcut>
+</shortcuts>
