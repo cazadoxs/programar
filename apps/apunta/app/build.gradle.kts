@@ -138,7 +138,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.android)
     implementation(libs.kotlinx.coroutines.guava)
     implementation(libs.play.billing)
-    implementation(libs.mlkit.genai.summarization)
 
     testImplementation(libs.junit)
     testImplementation(libs.kotlinx.coroutines.test)

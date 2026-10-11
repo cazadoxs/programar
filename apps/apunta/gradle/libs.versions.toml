@@ -11,7 +11,6 @@ room = "2.7.1"
 coroutines = "1.10.2"
 billing = "8.0.0"
 splashscreen = "1.0.1"
-mlkitGenaiSummarization = "1.0.0-beta1"
 junit = "4.13.2"
 
 [libraries]
@@ -36,7 +35,6 @@ kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-
 kotlinx-coroutines-guava = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-guava", version.ref = "coroutines" }
 kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "coroutines" }
 play-billing = { group = "com.android.billingclient", name = "billing", version.ref = "billing" }
-mlkit-genai-summarization = { group = "com.google.mlkit", name = "genai-summarization", version.ref = "mlkitGenaiSummarization" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 
 [plugins]
