@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="toma_paper">#FFF6F1E7</color>
+    <color name="toma_card">#FFFFFDF8</color>
+    <color name="toma_green">#FF1F5E55</color>
+    <color name="toma_ink">#FF1D2A27</color>
+    <color name="toma_ink_soft">#FF5C6A66</color>
+    <color name="toma_coral">#FFE36A4A</color>
+    <color name="ic_launcher_background">#FF1F5E55</color>
+</resources>
