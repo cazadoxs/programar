@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  packageNames is narrowed at runtime (FocoAccessibilityService.applyPackageFilter)
-  to the apps that can be blocked, so the system does not deliver events from
-  any other app. Key-event filtering powers the double-press capture gesture.
+  packageNames: the catalogue apps (packages/core/src/catalog.ts), so even
+  before the app has sent any state the service never sees other apps. It is
+  replaced at runtime (FocoAccessibilityService.applyPackageFilter) by the
+  list JS sends. Key-event filtering powers the double-press capture gesture.
 -->
 <accessibility-service xmlns:android="http://schemas.android.com/apk/res/android"
     android:accessibilityEventTypes="typeWindowStateChanged|typeWindowContentChanged"
@@ -11,5 +12,6 @@
     android:canRetrieveWindowContent="true"
     android:canRequestFilterKeyEvents="true"
     android:notificationTimeout="120"
+    android:packageNames="com.instagram.android,com.instagram.lite,com.zhiliaoapp.musically,com.ss.android.ugc.trill,com.ss.android.ugc.aweme,com.google.android.youtube,com.snapchat.android,com.facebook.katana,com.facebook.lite,com.twitter.android,com.reddit.frontpage,com.whatsapp,com.whatsapp.w4b"
     android:isAccessibilityTool="false"
     android:description="@string/foco_accessibility_description" />

@@ -1,5 +1,5 @@
 import { sql } from "drizzle-orm";
-import { bigint, jsonb, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
+import { bigint, integer, jsonb, pgTable, primaryKey, text, timestamp } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -7,6 +7,10 @@ export const users = pgTable("users", {
   name: text("name"),
   passwordHash: text("password_hash").notNull(),
   aiProvider: text("ai_provider"),
+  /** "free" | "pro" (one-time Google Play purchase). */
+  plan: text("plan").notNull().default("free"),
+  /** Must match the `ver` claim of a session token; bumping it logs out every device. */
+  tokenVersion: integer("token_version").notNull().default(0),
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
@@ -51,6 +55,31 @@ export const calendarAccounts = pgTable("calendar_accounts", {
   createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
 });
 
+/** Google Play purchases; a purchase token can unlock exactly one account. */
+export const purchases = pgTable("purchases", {
+  purchaseToken: text("purchase_token").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  productId: text("product_id").notNull(),
+  orderId: text("order_id"),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** Destructive assistant actions waiting for the user's confirmation in the app (expire after 30 min). */
+export const aiPending = pgTable("ai_pending", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  tool: text("tool").notNull(),
+  input: jsonb("input").notNull(),
+  summary: text("summary").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
+});
+
+/** OAuth `state` ids already redeemed, kept until the state would have expired anyway. */
+export const oauthStates = pgTable("oauth_states", {
+  jti: text("jti").primaryKey(),
+  expiresAt: timestamp("expires_at", { withTimezone: true }).notNull(),
+});
+
 export const BOOTSTRAP_SQL = `
 CREATE SEQUENCE IF NOT EXISTS records_seq;
 CREATE TABLE IF NOT EXISTS users (
@@ -90,5 +119,27 @@ CREATE TABLE IF NOT EXISTS calendar_accounts (
   last_synced_at timestamptz,
   last_error text,
   created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS plan text NOT NULL DEFAULT 'free';
+CREATE TABLE IF NOT EXISTS purchases (
+  purchase_token text PRIMARY KEY,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  product_id text NOT NULL,
+  order_id text,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+ALTER TABLE users ADD COLUMN IF NOT EXISTS token_version integer NOT NULL DEFAULT 0;
+CREATE TABLE IF NOT EXISTS ai_pending (
+  id text PRIMARY KEY,
+  user_id text NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  tool text NOT NULL,
+  input jsonb NOT NULL,
+  summary text NOT NULL,
+  created_at timestamptz NOT NULL DEFAULT now()
+);
+CREATE INDEX IF NOT EXISTS ai_pending_user ON ai_pending (user_id);
+CREATE TABLE IF NOT EXISTS oauth_states (
+  jti text PRIMARY KEY,
+  expires_at timestamptz NOT NULL
 );
 `;

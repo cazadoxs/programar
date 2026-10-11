@@ -9,6 +9,10 @@ export interface Prefs {
   /** Apps blocked by default when starting a focus session. */
   focusApps: string[];
   voice: "device" | "server";
+  /** Non-strict whole-app blocks show a 10-second pause screen instead of closing the app. */
+  pauseScreen: boolean;
+  /** First-run walkthrough done. */
+  onboarded: boolean;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -18,6 +22,8 @@ export const DEFAULT_PREFS: Prefs = {
   limits: [],
   focusApps: ["instagram", "tiktok", "youtube", "snapchat", "facebook", "x"],
   voice: "device",
+  pauseScreen: false,
+  onboarded: false,
 };
 
 export function usePrefs(): Prefs {

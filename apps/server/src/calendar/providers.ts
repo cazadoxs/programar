@@ -23,6 +23,8 @@ export interface OAuthCalendarProvider {
   refresh(tokens: OAuthTokens): Promise<OAuthTokens>;
   listCalendars(accessToken: string): Promise<RemoteCalendar[]>;
   listEvents(accessToken: string, calendarId: string, from: Date, to: Date): Promise<RemoteEvent[]>;
+  /** Best effort: tells the provider to forget the grant (Google only; Microsoft has no simple revoke). */
+  revoke?(tokens: OAuthTokens): Promise<void>;
 }
 
 async function postForm(fetchImpl: typeof fetch, url: string, form: Record<string, string>) {
@@ -63,7 +65,8 @@ export function googleCalendar(env: Env, fetchImpl: typeof fetch = fetch): OAuth
         client_id: cfg.clientId,
         redirect_uri: redirect,
         response_type: "code",
-        scope: "https://www.googleapis.com/auth/calendar openid email",
+        // Read-only: Foco only imports events. offline + consent so a refresh token always arrives.
+        scope: "https://www.googleapis.com/auth/calendar.readonly",
         access_type: "offline",
         prompt: "consent",
         state,
@@ -79,6 +82,14 @@ export function googleCalendar(env: Env, fetchImpl: typeof fetch = fetch): OAuth
         }),
         tokens,
       ),
+    async revoke(tokens) {
+      const token = tokens.refreshToken ?? tokens.accessToken;
+      await fetchImpl(`https://oauth2.googleapis.com/revoke?${new URLSearchParams({ token })}`, {
+        method: "POST",
+        headers: { "content-type": "application/x-www-form-urlencoded" },
+        signal: AbortSignal.timeout(5000),
+      });
+    },
     async listCalendars(token) {
       const body = await getJson<{ items: Array<{ id: string; summary: string; backgroundColor?: string; accessRole: string }> }>(fetchImpl, `${API}/users/me/calendarList`, token);
       return body.items.map((c) => ({ externalId: c.id, name: c.summary, color: c.backgroundColor ?? "#4285f4", readOnly: !["owner", "writer"].includes(c.accessRole) }));
@@ -119,7 +130,7 @@ export function microsoftCalendar(env: Env, fetchImpl: typeof fetch = fetch): OA
   if (!cfg) return undefined;
   const redirect = redirectUri(env, "microsoft");
   const base = `https://login.microsoftonline.com/${cfg.tenant}/oauth2/v2.0`;
-  const scope = "offline_access Calendars.ReadWrite User.Read";
+  const scope = "Calendars.Read offline_access";
   const GRAPH = "https://graph.microsoft.com/v1.0";
   return {
     id: "microsoft",

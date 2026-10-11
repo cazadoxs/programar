@@ -7,3 +7,5 @@ export * from "./ics";
 export * from "./capture";
 export * from "./sync";
 export * from "./assistant";
+export * from "./plans";
+export * from "./stats";

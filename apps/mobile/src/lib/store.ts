@@ -11,6 +11,15 @@ interface Persisted {
   cursor: number;
   records: SyncRecord[];
   pending: string[];
+  /** Account the synced data belongs to; null for data created before logging in. */
+  owner?: string | null;
+}
+
+interface PushResult extends PushResponse {
+  /** Records the server refused as invalid: dropped so they can't block sync forever. */
+  errors?: Array<{ collection: string; id: string; error: string }>;
+  /** Server copies that won over our rejected writes. */
+  conflicts?: SyncRecord[];
 }
 
 /**
@@ -22,6 +31,7 @@ class LocalStore {
   private records = new Map<string, SyncRecord>();
   private pending = new Set<string>();
   private cursor = 0;
+  owner: string | null = null;
   deviceId = "";
   private listeners = new Set<() => void>();
   private cache = new Map<Collection, unknown[]>();
@@ -39,6 +49,7 @@ class LocalStore {
       this.cursor = p.cursor;
       p.records.forEach((r) => this.records.set(recordKey(r), r));
       this.pending = new Set(p.pending);
+      this.owner = p.owner ?? null;
     }
     if (!this.deviceId) this.deviceId = `device:${Crypto.randomUUID()}`;
     this.ready = true;
@@ -72,8 +83,9 @@ class LocalStore {
 
   remove(collection: Collection, id: string) {
     const prev = this.records.get(`${collection}:${id}`);
+    if (!prev || prev.deletedAt) return;
     const now = new Date().toISOString();
-    this.write({ collection, id, data: prev?.data ?? null, updatedAt: now, deletedAt: now, deviceId: this.deviceId });
+    this.write({ collection, id, data: prev.data ?? {}, updatedAt: now, deletedAt: now, deviceId: this.deviceId });
   }
 
   private write(r: SyncRecord) {
@@ -92,7 +104,7 @@ class LocalStore {
   }
 
   private async save() {
-    const p: Persisted = { deviceId: this.deviceId, cursor: this.cursor, records: [...this.records.values()], pending: [...this.pending] };
+    const p: Persisted = { deviceId: this.deviceId, cursor: this.cursor, records: [...this.records.values()], pending: [...this.pending], owner: this.owner };
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(p));
   }
 
@@ -116,11 +128,13 @@ class LocalStore {
       const keys = [...this.pending];
       if (keys.length) {
         const changes = keys.map((k) => this.records.get(k)!).filter(Boolean);
-        await api<PushResponse>("/sync/push", { body: { deviceId: this.deviceId, changes } });
-        // Rejected ones lost to a newer server copy, which the pull brings in.
+        const res = await api<PushResult>("/sync/push", { body: { deviceId: this.deviceId, changes } });
+        // Rejected writes lost to a newer server copy: apply it so this device converges.
         keys.forEach((k) => {
           if (this.records.get(k) === changes.find((c) => recordKey(c) === k)) this.pending.delete(k);
         });
+        if (res.conflicts?.length) applyRemote(this.records, res.conflicts);
+        res.errors?.forEach((e) => console.warn(`[foco] el servidor rechazó ${e.collection}:${e.id}: ${e.error}`));
       }
       let more = true;
       while (more) {
@@ -137,10 +151,27 @@ class LocalStore {
     this.changed();
   }
 
-  /** After logging into an account: upload everything created while offline. */
-  markAllPending() {
-    this.records.forEach((_, k) => this.pending.add(k));
+  /**
+   * After logging into `userId`: data created before having an account (or
+   * already this account's) is uploaded; another account's leftovers are
+   * wiped so they never leak into this one.
+   */
+  adopt(userId: string) {
+    if (this.owner && this.owner !== userId) this.clear();
+    else this.records.forEach((_, k) => this.pending.add(k));
+    this.owner = userId;
     this.cursor = 0;
+    this.changed();
+  }
+
+  /** Forget everything on this device (logout). The account keeps its copy. */
+  clear() {
+    this.records.clear();
+    this.pending.clear();
+    this.cursor = 0;
+    this.owner = null;
+    this.lastSyncError = null;
+    this.changed();
   }
 }
 

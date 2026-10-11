@@ -8,7 +8,7 @@
     "userInterfaceStyle": "dark",
     "android": {
       "adaptiveIcon": {
-        "backgroundColor": "#0F1226",
+        "backgroundColor": "#0B0B12",
         "foregroundImage": "./assets/android-icon-foreground.png",
         "backgroundImage": "./assets/android-icon-background.png",
         "monochromeImage": "./assets/android-icon-monochrome.png"
@@ -20,7 +20,8 @@
         "android.permission.RECORD_AUDIO",
         "android.permission.SYSTEM_ALERT_WINDOW",
         "android.permission.PACKAGE_USAGE_STATS"
-      ]
+      ],
+      "versionCode": 1
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -48,6 +49,17 @@
           "microphonePermission": "Para dictar notas rápidas.",
           "speechRecognitionPermission": "Para transcribir lo que dictas en la captura rápida."
         }
+      ],
+      "expo-font",
+      "expo-iap",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "resizeMode": "contain",
+          "backgroundColor": "#0B0B12"
+        }
       ]
     ],
     "scheme": "foco",
@@ -57,6 +69,8 @@
     "platforms": [
       "android",
       "web"
-    ]
+    ],
+    "backgroundColor": "#0B0B12",
+    "description": "Bloquea Reels, TikTok y las apps que te distraen, junta tus calendarios y organiza tu día con IA."
   }
 }

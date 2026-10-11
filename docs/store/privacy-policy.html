@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Política de privacidad · Foco</title>
+<meta name="description" content="Política de privacidad de Foco, la app para bloquear distracciones, organizar tu calendario y planificar tu día. / Foco privacy policy.">
+<meta name="theme-color" content="#0B0B12">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cpath d='M439.2 223.7 A186 186 0 1 1 288.3 72.8' fill='none' stroke='%23FFB23F' stroke-width='52' stroke-linecap='round'/%3E%3Ccircle cx='298' cy='214' r='80' fill='%23FFB23F'/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap">
+<style>
+  :root {
+    --noche: #0B0B12; --superficie: #15151F; --superficie2: #1E1E2B; --linea: #2A2A3A;
+    --papel: #F5F2EA; --niebla: #A09DB0; --foco: #FFB23F; --brasa: #FF5B49; --brote: #43D9A3; --cielo: #7AA7FF;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body {
+    margin: 0; color: var(--papel);
+    background: radial-gradient(640px 320px at 12% -60px, rgba(255,178,63,.13), transparent 70%) no-repeat, var(--noche);
+    font: 400 16.5px/1.65 Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px 80px; }
+  header.top {
+    padding: 48px 0 28px; border-bottom: 1px solid var(--linea); margin-bottom: 28px;
+  }
+  .brand { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--papel); }
+  .brand svg { width: 40px; height: 40px; flex: none; }
+  .brand span { font: 700 26px/1 "Space Grotesk", Inter, sans-serif; letter-spacing: -.02em; }
+  h1, h2, h3 { font-family: "Space Grotesk", Inter, sans-serif; letter-spacing: -.015em; line-height: 1.2; }
+  h1 { font-size: clamp(30px, 6vw, 42px); margin: 28px 0 8px; }
+  h2 { font-size: 23px; margin: 44px 0 10px; padding-top: 8px; scroll-margin-top: 16px; }
+  h2 .n { color: var(--foco); margin-right: 8px; }
+  h3 { font-size: 18px; margin: 26px 0 6px; color: var(--papel); }
+  p, li { color: #E6E2D8; }
+  .muted { color: var(--niebla); }
+  a { color: var(--foco); text-underline-offset: 3px; }
+  a:hover { color: #FFC66E; }
+  strong { color: var(--papel); font-weight: 600; }
+  ul { padding-left: 22px; }
+  li { margin: 4px 0; }
+  .lang { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 18px; }
+  .lang a, .toc a { text-decoration: none; }
+  .pill {
+    display: inline-block; padding: 6px 14px; border-radius: 999px; font-size: 14px; font-weight: 500;
+    background: var(--superficie2); border: 1px solid var(--linea); color: var(--papel);
+  }
+  .card {
+    background: var(--superficie); border: 1px solid var(--linea); border-radius: 16px;
+    padding: 18px 20px; margin: 18px 0;
+  }
+  .card.key { border-color: rgba(255,178,63,.45); background: linear-gradient(180deg, rgba(255,178,63,.08), var(--superficie) 60%); }
+  .card.key h3 { margin-top: 0; color: var(--foco); }
+  .card ul { margin: 8px 0 0; }
+  .ok::marker { color: var(--brote); }
+  .toc { columns: 2 240px; column-gap: 24px; padding-left: 20px; margin: 12px 0 0; }
+  .toc li { break-inside: avoid; }
+  .table { width: 100%; overflow-x: auto; margin: 14px 0; border: 1px solid var(--linea); border-radius: 14px; }
+  table { border-collapse: collapse; width: 100%; min-width: 560px; font-size: 15px; }
+  th, td { text-align: left; vertical-align: top; padding: 11px 14px; border-bottom: 1px solid var(--linea); }
+  th { background: var(--superficie2); font-weight: 600; color: var(--papel); font-size: 13.5px; letter-spacing: .02em; }
+  tr:last-child td { border-bottom: 0; }
+  td { color: #E6E2D8; }
+  .tag { display: inline-block; font-size: 12.5px; padding: 1px 8px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+  .tag.dev { background: rgba(67,217,163,.14); color: var(--brote); }
+  .tag.srv { background: rgba(122,167,255,.14); color: var(--cielo); }
+  hr { border: 0; border-top: 1px solid var(--linea); margin: 64px 0 8px; }
+  footer { margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--linea); color: var(--niebla); font-size: 14px; }
+  @media (max-width: 520px) {
+    body { font-size: 16px; }
+    header.top { padding-top: 32px; }
+    .card { padding: 16px; }
+  }
+  @media print {
+    body { background: #fff; color: #111; }
+    p, li, td { color: #222; }
+    a { color: #8a5300; }
+    .card, .table, th { background: #fff !important; border-color: #ccc; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <a class="brand" href="#" aria-label="Foco">
+    <svg viewBox="0 0 512 512" aria-hidden="true"><path d="M439.2 223.7 A186 186 0 1 1 288.3 72.8" fill="none" stroke="#FFB23F" stroke-width="52" stroke-linecap="round"/><circle cx="298" cy="214" r="80" fill="#FFB23F"/></svg>
+    <span>foco</span>
+  </a>
+  <h1>Política de privacidad</h1>
+  <p class="muted">Última actualización: 11 de octubre de 2026 · Versión 1.0</p>
+  <nav class="lang" aria-label="Idioma">
+    <a class="pill" href="#es">Español</a>
+    <a class="pill" href="#en">English</a>
+    <a class="pill" href="#borrar-cuenta">Borrar mi cuenta</a>
+  </nav>
+</header>
+
+<main>
+<section id="es" lang="es">
+
+<div class="card key">
+  <h3>Lo esencial, en 30 segundos</h3>
+  <ul>
+    <li class="ok"><strong>Lo que haces en tu móvil se queda en tu móvil.</strong> Qué apps usas, cuánto tiempo y qué hay en tu pantalla se analiza solo en el teléfono para bloquear lo que tú eliges. Nunca se envía a nuestro servidor.</li>
+    <li class="ok">Guardamos en tu cuenta lo necesario para sincronizar el móvil y el PC: tu email, tus tareas, eventos, notas y reglas de bloqueo.</li>
+    <li class="ok">Tus claves de IA se guardan cifradas y solo se usan para hablar con el proveedor que tú eliges.</li>
+    <li class="ok"><strong>Sin anuncios. No vendemos tus datos.</strong> No hacemos perfiles publicitarios ni usamos tus datos para entrenar modelos de IA.</li>
+    <li class="ok">Puedes borrar tu cuenta y todo su contenido cuando quieras, desde la app.</li>
+  </ul>
+</div>
+
+<p>Esta política explica cómo trata tus datos <strong>Foco</strong> (la app para Android, la versión web y el servidor que los sincroniza). Está escrita para que se entienda; si algo no está claro, escríbenos.</p>
+
+<nav aria-label="Índice">
+  <ol class="toc">
+    <li><a href="#responsable">Quién es el responsable</a></li>
+    <li><a href="#datos">Qué datos tratamos</a></li>
+    <li><a href="#dispositivo">Lo que nunca sale del móvil</a></li>
+    <li><a href="#finalidades">Para qué y con qué base legal</a></li>
+    <li><a href="#terceros">Con quién se comparten</a></li>
+    <li><a href="#transferencias">Transferencias fuera de la UE</a></li>
+    <li><a href="#conservacion">Cuánto tiempo los guardamos</a></li>
+    <li><a href="#derechos">Tus derechos</a></li>
+    <li><a href="#borrar-cuenta">Borrar tu cuenta</a></li>
+    <li><a href="#seguridad">Seguridad</a></li>
+    <li><a href="#menores">Menores</a></li>
+    <li><a href="#google">Datos de Google (Limited Use)</a></li>
+    <li><a href="#cambios">Cambios</a></li>
+  </ol>
+</nav>
+
+<h2 id="responsable"><span class="n">1</span>Quién es el responsable</h2>
+<p>El responsable del tratamiento es <strong>Álvaro [apellidos]</strong>, desarrollador independiente con domicilio en Valencia (España). Contacto para cualquier asunto de privacidad: <a href="mailto:[email]">[email]</a>.</p>
+<p>Foco no tiene Delegado de Protección de Datos porque no está obligado a nombrarlo; puedes escribir a ese mismo correo.</p>
+
+<h2 id="datos"><span class="n">2</span>Qué datos tratamos</h2>
+<p>Las etiquetas indican dónde se tratan: <span class="tag dev">Solo en el móvil</span> o <span class="tag srv">En el servidor</span>.</p>
+<div class="table"><table>
+  <thead><tr><th>Dato</th><th>Ejemplos</th><th>Dónde</th></tr></thead>
+  <tbody>
+    <tr><td><strong>Cuenta</strong></td><td>Email, nombre (opcional), contraseña (guardada solo como <em>hash</em>, nunca en claro), identificador de usuario.</td><td><span class="tag srv">Servidor</span></td></tr>
+    <tr><td><strong>Tu contenido</strong></td><td>Tareas, notas y capturas rápidas, eventos que creas en Foco, reglas de bloqueo, horarios, ajustes y conversaciones con el asistente.</td><td><span class="tag srv">Servidor</span></td></tr>
+    <tr><td><strong>Calendarios conectados</strong></td><td>Si conectas Google o Microsoft: los permisos de acceso (<em>tokens</em>, cifrados) y los eventos de esos calendarios. Si importas calendarios del móvil (Samsung, Xiaomi…) o un enlace <code>.ics</code> (iCloud, universidad): sus eventos.</td><td><span class="tag srv">Servidor</span></td></tr>
+    <tr><td><strong>Claves de IA</strong></td><td>La clave de API de Anthropic, OpenAI o Google que tú introduces, cifrada con AES-256-GCM.</td><td><span class="tag srv">Servidor</span> (o solo en el móvil, si así lo eliges)</td></tr>
+    <tr><td><strong>Audio de dictado</strong></td><td>Si dictas una nota con la voz del móvil, se transcribe en el teléfono. Si eliges transcribir con Whisper o Gemini, el audio pasa por el servidor hacia ese proveedor y <strong>no se guarda</strong>: solo el texto resultante.</td><td><span class="tag dev">Móvil</span> / tránsito</td></tr>
+    <tr><td><strong>Compras</strong></td><td>Si compras Foco Pro: el identificador y el token de compra de Google Play para comprobar que es válida, y la fecha. No vemos ni guardamos tu tarjeta ni tus datos de pago.</td><td><span class="tag srv">Servidor</span></td></tr>
+    <tr><td><strong>Datos técnicos</strong></td><td>Registros del servidor (dirección IP, fecha y hora, ruta pedida, errores) para seguridad y para arreglar fallos.</td><td><span class="tag srv">Servidor</span></td></tr>
+  </tbody>
+</table></div>
+
+<h2 id="dispositivo"><span class="n">3</span>Lo que nunca sale del móvil</h2>
+<p>Para bloquear, Foco necesita saber qué app (y qué sección, como Reels o Historias) tienes delante. Lo hace con el <strong>servicio de accesibilidad</strong> de Android o, si no está disponible, con el <strong>acceso a uso</strong> y una pantalla superpuesta. Ambos se activan solo si tú lo permites, después de un aviso que explica para qué sirven.</p>
+<ul>
+  <li>La detección de apps y pantallas, el tiempo de uso de cada app, la lista de apps instaladas y las estadísticas de bloqueo se procesan <strong>solo en tu teléfono</strong>.</li>
+  <li>Foco <strong>no lee, guarda ni envía</strong> lo que escribes en otras apps, tus mensajes ni el contenido que ves.</li>
+  <li>La detección de la doble pulsación del botón de volumen (captura rápida) también ocurre solo en el móvil.</li>
+</ul>
+
+<h2 id="finalidades"><span class="n">4</span>Para qué usamos los datos y con qué base legal</h2>
+<div class="table"><table>
+  <thead><tr><th>Finalidad</th><th>Base legal (RGPD)</th></tr></thead>
+  <tbody>
+    <tr><td>Crear tu cuenta, guardar y sincronizar tu contenido entre dispositivos, mostrarte tu calendario unificado.</td><td>Ejecución del contrato (art. 6.1.b): son las condiciones de uso de Foco que aceptas.</td></tr>
+    <tr><td>Conectar calendarios de Google/Microsoft, usar el asistente de IA con tu clave, transcribir audio con un proveedor externo.</td><td>Tu consentimiento (art. 6.1.a), que das al activar cada función y puedes retirar desconectándola.</td></tr>
+    <tr><td>Comprobar y restaurar la compra de Foco Pro.</td><td>Ejecución del contrato (art. 6.1.b) y obligaciones legales (art. 6.1.c) de conservación de registros.</td></tr>
+    <tr><td>Seguridad, prevención de abusos y corrección de errores (registros del servidor).</td><td>Interés legítimo (art. 6.1.f) en mantener el servicio seguro y funcionando.</td></tr>
+    <tr><td>Responderte cuando nos escribes.</td><td>Tu consentimiento / interés legítimo.</td></tr>
+  </tbody>
+</table></div>
+<p>No tomamos decisiones automatizadas con efectos legales sobre ti. El asistente de IA solo propone cambios y te pide confirmación.</p>
+
+<h2 id="terceros"><span class="n">5</span>Con quién se comparten</h2>
+<p><strong>No vendemos ni alquilamos tus datos, y no hay anuncios ni rastreadores publicitarios.</strong> Solo intervienen estos proveedores, cada uno para lo suyo:</p>
+<ul>
+  <li><strong>Proveedor de hosting y base de datos</strong> — [Railway / Fly.io / Render + Neon], servidores en [región, p. ej. UE (Fráncfort)]. Aloja el servidor y la base de datos como encargado del tratamiento.</li>
+  <li><strong>Google</strong> (Google Calendar API) y <strong>Microsoft</strong> (Microsoft Graph) — solo si conectas esos calendarios, para leer y escribir eventos en tu nombre.</li>
+  <li><strong>El proveedor de IA que tú eliges</strong> — Anthropic, OpenAI o Google. Cuando usas el asistente o la transcripción, enviamos tu petición y el contexto necesario (por ejemplo, tus eventos y tareas del día) usando <strong>tu propia clave</strong>. Ese proveedor trata los datos según sus condiciones de API, que aceptaste al crear la clave. No enviamos nada a un proveedor de IA si no usas esas funciones.</li>
+  <li><strong>Google Play</strong> — procesa el pago de Foco Pro (Google Play Billing). Google es responsable de los datos de pago; nosotros solo recibimos la confirmación de la compra.</li>
+  <li>Autoridades, solo si una ley nos obliga.</li>
+</ul>
+
+<h2 id="transferencias"><span class="n">6</span>Transferencias fuera de la UE</h2>
+<p>Algunos proveedores (Google, Microsoft, Anthropic, OpenAI y, según la región elegida, el hosting) están en Estados Unidos. Esas transferencias se amparan en el <strong>Marco de Privacidad de Datos UE-EE. UU.</strong> cuando el proveedor está adherido, o en las <strong>cláusulas contractuales tipo</strong> de la Comisión Europea.</p>
+
+<h2 id="conservacion"><span class="n">7</span>Cuánto tiempo guardamos los datos</h2>
+<ul>
+  <li><strong>Cuenta y contenido</strong>: mientras tengas la cuenta. Lo que borras en la app se marca como borrado (para que desaparezca de todos tus dispositivos) y deja de mostrarse; se elimina definitivamente al borrar la cuenta o cuando lo pidas.</li>
+  <li><strong>Al borrar la cuenta</strong>: todo se elimina de la base de datos al momento; las copias de seguridad se sobrescriben en un máximo de 30 días.</li>
+  <li><strong>Calendarios conectados</strong>: hasta que los desconectes (los permisos se revocan y sus eventos se borran de Foco).</li>
+  <li><strong>Audio de dictado</strong>: no se guarda.</li>
+  <li><strong>Registros del servidor</strong>: 30 días.</li>
+  <li><strong>Registro de compra</strong>: mientras tengas la cuenta y, después, el tiempo que exija la ley fiscal (en España, hasta 4–6 años) solo el dato mínimo de la compra.</li>
+</ul>
+
+<h2 id="derechos"><span class="n">8</span>Tus derechos</h2>
+<p>Puedes ejercer en cualquier momento tus derechos de <strong>acceso, rectificación, supresión, oposición, limitación del tratamiento y portabilidad</strong>, y <strong>retirar tu consentimiento</strong> (sin que afecte a lo hecho antes). Escribe a <a href="mailto:[email]">[email]</a> desde el email de tu cuenta; respondemos en un plazo máximo de un mes.</p>
+<p>Si crees que no hemos tratado bien tus datos, puedes reclamar ante la <strong>Agencia Española de Protección de Datos</strong> (<a href="https://www.aepd.es" rel="noopener">aepd.es</a>) o la autoridad de tu país.</p>
+
+<h2 id="borrar-cuenta"><span class="n">9</span>Borrar tu cuenta</h2>
+<div class="card">
+  <p style="margin-top:0"><strong>Desde la app</strong> (Android o web): <strong>Ajustes › Cuenta › Borrar cuenta</strong>, confirma con tu contraseña. Es inmediato.</p>
+  <p><strong>Sin la app</strong>: escribe a <a href="mailto:[email]?subject=Borrar%20mi%20cuenta%20de%20Foco">[email]</a> con el asunto «Borrar mi cuenta» desde el email con el que te registraste. La borramos en un máximo de 7 días y te lo confirmamos.</p>
+  <p style="margin-bottom:0" class="muted">Se borra: tu cuenta, tareas, notas, eventos, reglas, ajustes, conversaciones con el asistente, claves de IA y calendarios conectados. Se conserva solo el registro mínimo de compra que exige la ley (ver punto 7). Borrar la cuenta no cancela nada en Google Play porque Foco Pro es un pago único: no hay suscripción que dar de baja.</p>
+</div>
+
+<h2 id="seguridad"><span class="n">10</span>Seguridad</h2>
+<ul>
+  <li>Todas las conexiones van cifradas (HTTPS/TLS).</li>
+  <li>Las contraseñas se guardan con <em>hash</em> (scrypt) y las claves de IA y los permisos de calendario, cifrados con AES-256-GCM.</li>
+  <li>En el móvil, la sesión se guarda en el almacenamiento seguro del sistema.</li>
+  <li>Acceso a los servidores y a la base de datos restringido al responsable.</li>
+</ul>
+<p>Si hubiera una brecha de seguridad que afecte a tus datos, te avisaremos y lo notificaremos a la AEPD como exige la ley.</p>
+
+<h2 id="menores"><span class="n">11</span>Menores</h2>
+<p>Foco no está dirigida a niños. Para crear una cuenta necesitas tener al menos <strong>14 años</strong> (la edad de consentimiento digital en España) o la que fije la ley de tu país si es mayor. Si eres madre, padre o tutor y crees que un menor de esa edad nos ha dado datos, escríbenos y los borraremos.</p>
+
+<h2 id="google"><span class="n">12</span>Datos de las API de Google (Limited Use)</h2>
+<p>El uso y la transferencia a cualquier otra app de la información recibida de las API de Google por parte de Foco se ajustará a la <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Política de datos de usuario de los servicios de API de Google</a>, incluidos los requisitos de Uso Limitado. En concreto: los datos de Google Calendar solo se usan para mostrarte y gestionar tu calendario dentro de Foco y, si tú usas el asistente, para que tu proveedor de IA te responda; nunca se usan para publicidad, nunca se venden y nunca se usan para entrenar modelos de IA.</p>
+
+<h2 id="cambios"><span class="n">13</span>Cambios en esta política</h2>
+<p>Si cambiamos algo importante, te avisaremos en la app o por email antes de que entre en vigor. La fecha de arriba indica la última versión.</p>
+
+</section>
+
+<hr>
+
+<section id="en" lang="en">
+<h1 style="margin-top:32px">Privacy policy (English)</h1>
+<p class="muted">Last updated: 11 October 2026 · Version 1.0. If there is any discrepancy, the Spanish version prevails.</p>
+
+<div class="card key">
+  <h3>The essentials</h3>
+  <ul>
+    <li class="ok"><strong>What you do on your phone stays on your phone.</strong> Which apps you use, for how long and what is on your screen is analysed only on the device to block what you choose. It is never sent to our server.</li>
+    <li class="ok">Your account stores what is needed to sync your phone and computer: your email, tasks, events, notes and blocking rules.</li>
+    <li class="ok">Your AI keys are stored encrypted and only used to talk to the provider you choose.</li>
+    <li class="ok"><strong>No ads. We don't sell your data.</strong> No ad profiling, and your data is never used to train AI models.</li>
+    <li class="ok">You can delete your account and all its content at any time from the app.</li>
+  </ul>
+</div>
+
+<h2 id="en-controller">Controller</h2>
+<p><strong>Álvaro [surnames]</strong>, independent developer based in Valencia, Spain. Contact: <a href="mailto:[email]">[email]</a>.</p>
+
+<h2 id="en-data">Data we process</h2>
+<ul>
+  <li><strong>Account</strong>: email, optional name, password (hashed only), user ID.</li>
+  <li><strong>Your content</strong>: tasks, notes and quick captures, events you create, blocking rules, schedules, settings and assistant conversations.</li>
+  <li><strong>Connected calendars</strong>: encrypted access tokens and events from Google or Microsoft if you connect them; events from your phone calendars (Samsung, Xiaomi…) or <code>.ics</code> links (iCloud, university) if you import them.</li>
+  <li><strong>AI keys</strong>: your Anthropic, OpenAI or Google API key, encrypted with AES-256-GCM (or kept on the device only, if you prefer).</li>
+  <li><strong>Dictation audio</strong>: transcribed on the phone by default. If you choose Whisper or Gemini, audio passes through our server to that provider and is <strong>not stored</strong>.</li>
+  <li><strong>Purchases</strong>: Google Play purchase ID, token and date to verify Foco Pro. We never see your card or payment details.</li>
+  <li><strong>Technical logs</strong>: IP address, time, request and errors, kept 30 days for security and debugging.</li>
+</ul>
+<p><strong>Never leaves your phone:</strong> app and screen detection (via Android's Accessibility service or, if unavailable, usage access with an overlay, both only with your permission), app usage time, installed apps, blocking statistics and volume-button detection. Foco does not read, store or send what you type in other apps or the content you see.</p>
+
+<h2 id="en-purposes">Purposes and legal bases (GDPR)</h2>
+<ul>
+  <li>Providing your account, syncing and the unified calendar — <strong>performance of contract</strong> (Art. 6(1)(b)).</li>
+  <li>Connecting Google/Microsoft calendars, the AI assistant and external transcription — <strong>consent</strong> (Art. 6(1)(a)), withdrawable by disconnecting the feature.</li>
+  <li>Verifying Foco Pro purchases — <strong>contract</strong> and <strong>legal obligations</strong> (Art. 6(1)(b), (c)).</li>
+  <li>Security, abuse prevention and bug fixing — <strong>legitimate interest</strong> (Art. 6(1)(f)).</li>
+</ul>
+
+<h2 id="en-processors">Who we share data with</h2>
+<p>We do not sell or rent your data and there are no ads or ad trackers. Only these providers are involved: our <strong>hosting and database provider</strong> ([Railway / Fly.io / Render + Neon], [region]); <strong>Google</strong> (Calendar API) and <strong>Microsoft</strong> (Graph) if you connect those calendars; the <strong>AI provider you choose</strong> (Anthropic, OpenAI or Google), called with <strong>your own key</strong> only when you use the assistant or transcription, under that provider's API terms; and <strong>Google Play Billing</strong> for payments. Transfers to the US rely on the EU-US Data Privacy Framework or the European Commission's Standard Contractual Clauses.</p>
+
+<h2 id="en-retention">Retention</h2>
+<p>Account data and content are kept while your account exists; deleted items are hidden on all your devices and permanently removed when you delete your account or ask us to; backups roll over within 30 days after account deletion; server logs are kept 30 days; dictation audio is not stored; the minimum purchase record is kept as long as tax law requires.</p>
+
+<h2 id="delete-account">Delete your account</h2>
+<div class="card">
+  <p style="margin-top:0"><strong>In the app</strong> (Android or web): <strong>Settings › Account › Delete account</strong>, confirm with your password. Deletion is immediate.</p>
+  <p style="margin-bottom:0"><strong>Without the app</strong>: email <a href="mailto:[email]?subject=Delete%20my%20Foco%20account">[email]</a> from your account's address with the subject "Delete my account". We delete it within 7 days and confirm. Everything is removed (account, content, AI keys, connected calendars) except the minimum purchase record required by law. Foco Pro is a one-time purchase, so there is no subscription to cancel.</p>
+</div>
+
+<h2 id="en-rights">Your rights</h2>
+<p>You can request access, rectification, erasure, objection, restriction and portability, and withdraw consent at any time by writing to <a href="mailto:[email]">[email]</a>. We reply within one month. You may complain to the Spanish Data Protection Agency (<a href="https://www.aepd.es" rel="noopener">aepd.es</a>) or your local authority.</p>
+
+<h2 id="en-security">Security and minors</h2>
+<p>All connections use TLS; passwords are hashed (scrypt); AI keys and calendar tokens are encrypted with AES-256-GCM. Foco is not directed at children: you must be at least <strong>14</strong> (Spain's age of digital consent) or the higher age set by your country's law.</p>
+
+<h2 id="en-google">Google API data (Limited Use)</h2>
+<p>Foco's use and transfer to any other app of information received from Google APIs will adhere to the <a href="https://developers.google.com/terms/api-services-user-data-policy" rel="noopener">Google API Services User Data Policy</a>, including the Limited Use requirements. Google Calendar data is used only to show and manage your calendar in Foco and, when you use the assistant, to let your chosen AI provider answer you. It is never used for advertising, never sold and never used to train AI models.</p>
+
+<h2 id="en-changes">Changes</h2>
+<p>We will notify you in the app or by email before any material change takes effect.</p>
+</section>
+</main>
+
+<footer>
+  <p>Foco · Hecho en Valencia · <a href="mailto:[email]">[email]</a></p>
+  <p>Foco está disponible para Android y en la web. / Foco is available for Android and on the web.</p>
+</footer>
+</div>
+</body>
+</html>

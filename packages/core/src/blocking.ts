@@ -79,6 +79,8 @@ export function isSessionBlocking(session: FocusSession, now: Date): boolean {
   if (session.endedAt) return false;
   const start = new Date(session.startedAt);
   const end = new Date(session.endsAt);
+  // Synced data may be malformed: an unreadable session never blocks.
+  if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) return false;
   if (now < start || now >= end) return false;
   if (session.kind === "pomodoro") return pomodoroStateAt(start, now, session.pomodoro).phase === "focus";
   return true;
@@ -97,11 +99,20 @@ export function evaluateBlocks(input: BlockInput): ActiveBlock[] {
     }
   };
 
+  // Rules and sessions arrive through sync: skip a malformed one instead of failing every block.
   for (const rule of input.rules) {
-    if (rule.enabled && isScheduleActive(rule.schedule, input.now)) add(rule.targets, rule.name, !!rule.strict);
+    try {
+      if (rule.enabled && isScheduleActive(rule.schedule, input.now)) add(rule.targets, rule.name, !!rule.strict);
+    } catch {
+      // malformed rule
+    }
   }
   for (const s of input.sessions ?? []) {
-    if (isSessionBlocking(s, input.now)) add(s.targets, s.title ?? sessionLabel(s.kind), s.strict);
+    try {
+      if (isSessionBlocking(s, input.now)) add(s.targets, s.title ?? sessionLabel(s.kind), !!s.strict);
+    } catch {
+      // malformed session
+    }
   }
   for (const limit of input.limits ?? []) {
     const used = input.usageToday?.[limit.appId] ?? 0;
@@ -136,24 +147,39 @@ export function nextChangeAt(input: Omit<BlockInput, "limits" | "usageToday">): 
   };
 
   for (const rule of input.rules) {
-    if (!rule.enabled || rule.schedule.kind !== "weekly") continue;
-    const start = parseHHMM(rule.schedule.start);
-    const end = parseHHMM(rule.schedule.end);
-    const today = startOfDay(now);
-    for (let i = -1; i <= 7; i++) {
-      const day = addDays(today, i);
-      if (!rule.schedule.days.includes(day.getDay())) continue;
-      consider(atMinutes(day, start));
-      const endDay = start === end ? addDays(day, 1) : start < end ? day : addDays(day, 1);
-      consider(atMinutes(endDay, start === end ? 0 : end));
+    try {
+      if (!rule.enabled || rule.schedule.kind !== "weekly") continue;
+      const start = parseHHMM(rule.schedule.start);
+      const end = parseHHMM(rule.schedule.end);
+      const today = startOfDay(now);
+      for (let i = -1; i <= 7; i++) {
+        const day = addDays(today, i);
+        if (!rule.schedule.days.includes(day.getDay())) continue;
+        if (start === end) {
+          // Whole-day rule: active from local midnight to the next one, whatever the start time says.
+          consider(day);
+          consider(addDays(day, 1));
+          continue;
+        }
+        consider(atMinutes(day, start));
+        consider(atMinutes(start < end ? day : addDays(day, 1), end));
+      }
+    } catch {
+      // malformed rule
     }
   }
   for (const s of input.sessions ?? []) {
     if (s.endedAt) continue;
     const start = new Date(s.startedAt);
+    const end = new Date(s.endsAt);
+    if (Number.isNaN(start.getTime()) || Number.isNaN(end.getTime())) continue;
     consider(start);
-    consider(new Date(s.endsAt));
-    if (s.kind === "pomodoro" && now >= start) consider(pomodoroStateAt(start, now, s.pomodoro).phaseEndsAt);
+    consider(end);
+    try {
+      if (s.kind === "pomodoro" && now >= start) consider(pomodoroStateAt(start, now, s.pomodoro).phaseEndsAt);
+    } catch {
+      // malformed pomodoro config
+    }
   }
   return best;
 }

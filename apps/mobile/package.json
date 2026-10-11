@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "main": "expo-router/entry",
   "dependencies": {
+    "@expo-google-fonts/inter": "^0.4.2",
+    "@expo-google-fonts/space-grotesk": "^0.4.1",
     "@expo/metro-runtime": "~57.0.16",
     "@foco/core": "workspace:*",
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -12,11 +14,16 @@
     "expo-constants": "~57.0.21",
     "expo-crypto": "~57.0.3",
     "expo-dev-client": "~57.0.19",
+    "expo-font": "~57.0.4",
+    "expo-haptics": "~57.0.3",
+    "expo-iap": "^6.0.0",
+    "expo-linear-gradient": "~57.0.2",
     "expo-linking": "~57.0.12",
     "expo-localization": "~57.0.2",
     "expo-router": "~57.0.25",
     "expo-secure-store": "~57.0.4",
     "expo-speech-recognition": "57.1.0",
+    "expo-splash-screen": "~57.0.9",
     "expo-status-bar": "~57.0.1",
     "expo-web-browser": "~57.0.3",
     "react": "19.2.3",
@@ -24,6 +31,7 @@
     "react-native": "0.86.3",
     "react-native-safe-area-context": "~5.7.0",
     "react-native-screens": "~4.26.2",
+    "react-native-svg": "15.15.4",
     "react-native-web": "~0.21.3"
   },
   "devDependencies": {

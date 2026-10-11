@@ -60,8 +60,8 @@ export function currentBlocks(now = new Date()): ActiveBlock[] {
 /**
  * Precomputes what to block for the next days as time segments, so the
  * native service (which never evaluates rules itself) stays correct with the
- * app closed. Daily limits only apply to the current segment because usage
- * is only known now.
+ * app closed. Daily limits are sent apart: the native side measures usage
+ * since local midnight itself, so they hold with Foco closed too.
  */
 export function buildNativeState(now = new Date()): NativeBlockState {
   const rules = store.list<BlockRule>("rules");
@@ -73,7 +73,8 @@ export function buildNativeState(now = new Date()): NativeBlockState {
   while (t < horizon && timeline.length < MAX_SEGMENTS) {
     const next = nextChangeAt({ now: t, rules, sessions }) ?? horizon;
     const end = next < horizon ? next : horizon;
-    const blocks = timeline.length === 0 ? currentBlocks(t) : evaluateBlocks({ now: t, rules, sessions });
+    // Daily limits are enforced natively from live usage (see `limits` below).
+    const blocks = evaluateBlocks({ now: t, rules, sessions });
     timeline.push({
       start: t.getTime(),
       end: end.getTime(),
@@ -91,6 +92,13 @@ export function buildNativeState(now = new Date()): NativeBlockState {
     timeline,
     captureGesture: prefs.captureGesture,
     watchedPackages: CATALOG.flatMap((a) => a.androidPackages),
+    wholeAppFriction: prefs.pauseScreen,
+    limits: prefs.limits.map((l) => ({
+      appId: l.appId,
+      packages: findApp(l.appId)?.androidPackages ?? [],
+      minutesPerDay: l.minutesPerDay,
+      reason: "Límite diario",
+    })),
   };
 }
 

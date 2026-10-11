@@ -32,15 +32,20 @@ Play lo permite si se declara bien:
 Calendar API* → Pantalla de consentimiento OAuth (externa) → Credenciales →
 ID de cliente OAuth tipo *Aplicación web* con URI de redirección
 `https://TU-SERVIDOR/calendar/oauth/google/callback`. Copiar ID y secreto a
-`GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`. Mientras Google verifica la app
-(el permiso de calendario lo exige) se puede usar con hasta 100 usuarios de
-prueba.
+`GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET`. Foco solo pide lectura
+(`calendar.readonly`). Mientras Google verifica la app (el permiso de
+calendario lo exige) se puede usar con hasta 100 usuarios de prueba.
 
 **Microsoft**: entra.microsoft.com → Registros de aplicaciones → Nuevo
 registro (cuentas personales y de organización) → URI de redirección web
 `https://TU-SERVIDOR/calendar/oauth/microsoft/callback` → Certificados y
 secretos → nuevo secreto. Copiar a `MICROSOFT_CLIENT_ID` /
-`MICROSOFT_CLIENT_SECRET`.
+`MICROSOFT_CLIENT_SECRET`. Permisos delegados: `Calendars.Read` y
+`offline_access` (solo lectura).
+
+Tras el inicio de sesión, el servidor devuelve el control a la app
+(`foco://oauth`) o a la web (`WEB_URL/oauth`), que termina de conectar la
+cuenta con su propia sesión.
 
 Samsung y Xiaomi no necesitan nada: se leen desde el calendario del propio
 móvil (botón "Importar calendarios del móvil"). iCloud se añade con su enlace

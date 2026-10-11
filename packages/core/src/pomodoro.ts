@@ -30,7 +30,8 @@ export interface PomodoroState {
  */
 export function pomodoroStateAt(startedAt: Date, now: Date, config: PomodoroConfig = DEFAULT_POMODORO): PomodoroState {
   const { focusMinutes: f, shortBreakMinutes: s, longBreakMinutes: l, cyclesBeforeLongBreak: n } = config;
-  if (f <= 0 || n <= 0) throw new Error("Configuración de pomodoro inválida");
+  const valid = (v: number, min: number) => Number.isFinite(v) && v >= min && v <= 24 * 60;
+  if (!valid(f, 1e-9) || !valid(s, 0) || !valid(l, 0) || !Number.isInteger(n) || n < 1 || n > 100) throw new Error("Configuración de pomodoro inválida");
   // One "round" = n focus blocks, n-1 short breaks and one long break.
   const roundMinutes = n * f + (n - 1) * s + l;
   const elapsed = Math.max(0, (now.getTime() - startedAt.getTime()) / 60_000);

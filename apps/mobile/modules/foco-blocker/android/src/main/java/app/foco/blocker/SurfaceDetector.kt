@@ -1,6 +1,7 @@
 package app.foco.blocker
 
 import android.view.accessibility.AccessibilityNodeInfo
+import org.json.JSONArray
 import org.json.JSONObject
 import java.util.ArrayDeque
 import java.util.Locale
@@ -14,7 +15,7 @@ import java.util.Locale
  * shipping a new version.
  *
  * The walk is bounded (MAX_NODES, MAX_CHILDREN) so a check costs a few
- * hundred field reads at most.
+ * hundred field reads at most. Must be called on the main thread.
  */
 class SurfaceDetector(overrides: JSONObject?) {
 
@@ -25,25 +26,26 @@ class SurfaceDetector(overrides: JSONObject?) {
 
   data class Markers(val ids: List<String> = emptyList(), val tabs: List<String> = emptyList()) {
     companion object {
-      fun fromJson(o: JSONObject) = Markers(
-        ids = o.optJSONArray("ids")?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList(),
-        tabs = o.optJSONArray("tabs")?.let { a -> (0 until a.length()).map { a.getString(it) } } ?: emptyList(),
-      )
+      /** Remote overrides: anything that is not a non-blank string is ignored. */
+      fun fromJson(o: JSONObject) = Markers(ids = strings(o.optJSONArray("ids")), tabs = strings(o.optJSONArray("tabs")))
+
+      private fun strings(a: JSONArray?): List<String> =
+        if (a == null) emptyList()
+        else (0 until a.length()).mapNotNull { (a.opt(it) as? String)?.trim()?.lowercase(Locale.US)?.takeIf(String::isNotEmpty) }
     }
   }
 
+  /**
+   * [root] stays owned by the caller (who recycles it); every node fetched
+   * here is recycled here, which matters before Android 13 where nodes are pooled.
+   */
   fun detect(appId: String, root: AccessibilityNodeInfo, wanted: Set<String>): Set<String> {
     val appMarkers = markers[appId] ?: return emptySet()
     val relevant = appMarkers.filterKeys { it in wanted }
     if (relevant.isEmpty()) return emptySet()
 
     val found = mutableSetOf<String>()
-    val queue = ArrayDeque<AccessibilityNodeInfo>()
-    queue.add(root)
-    var visited = 0
-    while (queue.isNotEmpty() && visited < MAX_NODES && found.size < relevant.size) {
-      val node = queue.poll() ?: continue
-      visited++
+    walk(root) { node ->
       val id = node.viewIdResourceName?.lowercase(Locale.US)
       val selected = node.isSelected || node.isChecked
       val label = if (selected) "${node.text ?: ""} ${node.contentDescription ?: ""}".lowercase(Locale.US) else null
@@ -52,7 +54,7 @@ class SurfaceDetector(overrides: JSONObject?) {
         if (id != null && m.ids.any { id.contains(it) }) found += surface
         else if (label != null && m.tabs.any { label.contains(it) }) found += surface
       }
-      for (i in 0 until minOf(node.childCount, MAX_CHILDREN)) node.getChild(i)?.let(queue::add)
+      found.size < relevant.size
     }
     // TikTok: a selected inbox/profile tab means the user is not in the feed.
     if (appId == "tiktok" && "feed" in found) {
@@ -63,19 +65,36 @@ class SurfaceDetector(overrides: JSONObject?) {
   }
 
   private fun hasSelectedTab(root: AccessibilityNodeInfo, m: Markers): Boolean {
+    var hit = false
+    walk(root) { node ->
+      if (node.isSelected || node.isChecked) {
+        val label = "${node.text ?: ""} ${node.contentDescription ?: ""}".lowercase(Locale.US)
+        if (m.tabs.any { label.contains(it) }) hit = true
+      }
+      !hit
+    }
+    return hit
+  }
+
+  /** Bounded breadth-first walk; [visit] returns false to stop early. */
+  private inline fun walk(root: AccessibilityNodeInfo, visit: (AccessibilityNodeInfo) -> Boolean) {
     val queue = ArrayDeque<AccessibilityNodeInfo>()
     queue.add(root)
     var visited = 0
-    while (queue.isNotEmpty() && visited < MAX_NODES) {
-      val node = queue.poll() ?: continue
-      visited++
-      if (node.isSelected || node.isChecked) {
-        val label = "${node.text ?: ""} ${node.contentDescription ?: ""}".lowercase(Locale.US)
-        if (m.tabs.any { label.contains(it) }) return true
+    try {
+      while (queue.isNotEmpty() && visited < MAX_NODES) {
+        val node = queue.poll() ?: continue
+        visited++
+        try {
+          if (!visit(node)) return
+          for (i in 0 until minOf(node.childCount, MAX_CHILDREN)) node.getChild(i)?.let(queue::add)
+        } finally {
+          if (node !== root) FocoAccessibilityService.recycle(node)
+        }
       }
-      for (i in 0 until minOf(node.childCount, MAX_CHILDREN)) node.getChild(i)?.let(queue::add)
+    } finally {
+      while (queue.isNotEmpty()) queue.poll()?.let { if (it !== root) FocoAccessibilityService.recycle(it) }
     }
-    return false
   }
 
   companion object {

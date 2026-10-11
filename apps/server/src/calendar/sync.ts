@@ -5,6 +5,7 @@ import type { Db } from "../db";
 import { calendarAccounts } from "../db/schema";
 import { listRecords, putRecord } from "../records";
 import { sourceRecord, type OAuthCalendarProvider, type OAuthTokens, type RemoteEvent } from "./providers";
+import { safeFetchText, UnsafeUrlError, type Resolver } from "./safeFetch";
 
 export const CALENDAR_DEVICE = "server:calendar";
 const WINDOW_PAST_DAYS = 30;
@@ -15,6 +16,19 @@ export interface CalendarDeps {
   key: Buffer;
   providers: Partial<Record<"google" | "microsoft", OAuthCalendarProvider>>;
   fetchImpl: typeof fetch;
+  /** DNS resolver for ICS hosts (tests inject one). */
+  resolve?: Resolver;
+}
+
+/**
+ * What users see in `lastError` and API responses: never raw provider or
+ * network errors, which can carry internal hosts, addresses or tokens.
+ */
+export class CalendarSyncError extends Error {}
+
+export function publicSyncError(e: unknown, provider: string): string {
+  if (e instanceof UnsafeUrlError || e instanceof CalendarSyncError) return e.message;
+  return provider === "ics" ? "No se pudo descargar el calendario" : "No se pudo sincronizar el calendario; vuelve a conectarlo si sigue fallando";
 }
 
 type Account = typeof calendarAccounts.$inferSelect;
@@ -28,9 +42,8 @@ export async function syncAccount(deps: CalendarDeps, account: Account, now = ne
 
   try {
     if (account.provider === "ics") {
-      const res = await deps.fetchImpl(String(secret.url).replace(/^webcal:/, "https:"));
-      if (!res.ok) throw new Error(`No se pudo descargar el calendario (${res.status})`);
-      const events = parseIcs(await res.text(), { from, to }).map((e, i) => ({
+      const text = await safeFetchText(String(secret.url), deps.fetchImpl, { resolve: deps.resolve });
+      const events = parseIcs(text, { from, to }).map((e, i) => ({
         externalId: `${e.uid ?? i}:${e.start.getTime()}`,
         iCalUID: e.uid,
         title: e.title,
@@ -43,7 +56,7 @@ export async function syncAccount(deps: CalendarDeps, account: Account, now = ne
       calendars.push({ source: sourceRecord(account.id, "ics", account.label, "#8e8e93", true), events });
     } else {
       const provider = deps.providers[account.provider as "google" | "microsoft"];
-      if (!provider) throw new Error(`Proveedor ${account.provider} no configurado en el servidor`);
+      if (!provider) throw new CalendarSyncError(`${account.provider} no está configurado en el servidor`);
       let tokens = secret as OAuthTokens;
       if (tokens.expiresAt < Date.now() + 60_000) {
         tokens = await provider.refresh(tokens);
@@ -61,8 +74,10 @@ export async function syncAccount(deps: CalendarDeps, account: Account, now = ne
       }
     }
   } catch (e) {
-    await deps.db.update(calendarAccounts).set({ lastError: e instanceof Error ? e.message : String(e) }).where(eq(calendarAccounts.id, account.id));
-    throw e;
+    const message = publicSyncError(e, account.provider);
+    console.warn(`[foco] calendario ${account.id} (${account.provider}): ${e instanceof Error ? e.message.split("\n")[0]!.slice(0, 200) : "error"}`);
+    await deps.db.update(calendarAccounts).set({ lastError: message }).where(eq(calendarAccounts.id, account.id));
+    throw new CalendarSyncError(message);
   }
 
   const existing = await listRecords<CalendarEvent>(deps.db, account.userId, "events");
@@ -98,7 +113,7 @@ export async function syncAllForUser(deps: CalendarDeps, userId: string) {
     try {
       results.push({ id: a.id, label: a.label, ...(await syncAccount(deps, a)) });
     } catch (e) {
-      results.push({ id: a.id, label: a.label, error: e instanceof Error ? e.message : String(e) });
+      results.push({ id: a.id, label: a.label, error: publicSyncError(e, a.provider) });
     }
   }
   return results;

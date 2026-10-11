@@ -53,8 +53,13 @@ del PC o por el servidor desplegado).
 
 ```bash
 docker build -f apps/server/Dockerfile -t foco-server .
-docker run -p 8787:8787 -e DATABASE_URL=postgres://… -e JWT_SECRET=… -e ENCRYPTION_KEY=… -e PUBLIC_URL=https://… foco-server
+docker run -p 8787:8787 -e DATABASE_URL=postgres://… -e JWT_SECRET=… -e ENCRYPTION_KEY=… -e PUBLIC_URL=https://… -e WEB_URL=https://… -e TRUST_PROXY=1 foco-server
 ```
+
+`JWT_SECRET` debe tener al menos 32 caracteres aleatorios. `WEB_URL` es la
+dirección de la versión web (CORS y vuelta de OAuth) y `TRUST_PROXY=1` solo va
+si hay un proxy delante (para que los límites de peticiones vean la IP real).
+Todas las variables están en `apps/server/.env.example`.
 
 Cualquier hosting de contenedores con Postgres sirve (Railway, Fly.io, Render
 + Neon…).

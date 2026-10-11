@@ -29,6 +29,16 @@ export interface PushResponse {
   /** Ids (collection:id) the server rejected because it held a newer version. */
   rejected: string[];
   cursor: number;
+  /** The server's current copy of every rejected record, so the client can apply it right away. */
+  conflicts?: SyncRecord[];
+  /** Records refused as invalid (the rest of the batch is still applied). */
+  errors?: PushError[];
+}
+
+export interface PushError {
+  collection: string;
+  id: string;
+  error: string;
 }
 
 export interface PullResponse {

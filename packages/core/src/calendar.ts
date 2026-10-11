@@ -1,4 +1,4 @@
-import { addMinutes } from "./time";
+import { addMinutes, localDateKey } from "./time";
 
 export type CalendarProvider = "foco" | "google" | "microsoft" | "apple" | "device" | "caldav" | "ics";
 
@@ -100,6 +100,21 @@ export function findSlot(events: CalendarEvent[], from: Date, to: Date, minutes:
   return slot ? { start: slot.start, end: addMinutes(slot.start, minutes) } : null;
 }
 
+/**
+ * Events touching [from, to). All-day events are stored as UTC midnights
+ * (`2026-10-09T00:00:00.000Z`, end exclusive), so they are compared by their
+ * date against the local dates of the range: they never spill into a second
+ * day whatever the device's time zone.
+ */
 export function eventsBetween(events: CalendarEvent[], from: Date, to: Date): CalendarEvent[] {
-  return events.filter((e) => new Date(e.end) > from && new Date(e.start) < to);
+  const fromKey = localDateKey(from);
+  const lastKey = localDateKey(new Date(to.getTime() - 1));
+  return events.filter((e) => {
+    if (e.allDay) {
+      const s = e.start.slice(0, 10);
+      const end = e.end.slice(0, 10);
+      return s <= lastKey && (end > s ? end > fromKey : s >= fromKey);
+    }
+    return new Date(e.end) > from && new Date(e.start) < to;
+  });
 }

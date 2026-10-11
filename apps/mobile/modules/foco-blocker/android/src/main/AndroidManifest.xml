@@ -1,13 +1,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- Full-screen block page over other apps. -->
+    <!-- Full-screen block page over other apps (also what lets the fallback engine open it from the background). -->
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
-    <!-- Daily time limits (the user grants it in Settings › Usage access). -->
+    <!-- Daily time limits and the fallback engine (the user grants it in Settings › Usage access). -->
     <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
+    <!-- Fallback engine without accessibility: a foreground service with an ongoing notification. -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application>
+        <!-- Bound by the system only (BIND_ACCESSIBILITY_SERVICE), so exported must be true. -->
         <service
             android:name="app.foco.blocker.FocoAccessibilityService"
             android:exported="true"
@@ -21,6 +27,31 @@
                 android:resource="@xml/foco_accessibility_config" />
         </service>
 
+        <service
+            android:name="app.foco.blocker.FallbackBlockerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Digital wellbeing app blocker: while a focus session or daily limit the user set up is active, detects via usage access when the user opens an app they chose to block and shows a block or pause screen. Only used when the accessibility service is unavailable." />
+        </service>
+
+        <!-- Only system broadcasts (protected actions) reach it; the system can deliver to non-exported receivers. -->
+        <receiver
+            android:name="app.foco.blocker.BootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- Target of Foco's own "renew your blocks" alarm (explicit PendingIntent). -->
+        <receiver
+            android:name="app.foco.blocker.RenewalReceiver"
+            android:exported="false" />
+
+        <!-- Not exported: only Foco can start it. -->
         <activity
             android:name="app.foco.blocker.BlockActivity"
             android:exported="false"
