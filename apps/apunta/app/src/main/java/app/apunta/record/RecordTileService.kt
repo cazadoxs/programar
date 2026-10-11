@@ -16,6 +16,7 @@ class RecordTileService : TileService() {
         }
     }
 
+    @android.annotation.SuppressLint("StartActivityAndCollapseDeprecated")
     override fun onClick() {
         if (RecorderService.state.value.active) {
             RecorderService.send(this, RecorderService.ACTION_STOP)
