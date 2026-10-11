@@ -16,7 +16,7 @@ fun secret(name: String): String? = secrets.getProperty(name) ?: System.getenv(n
 
 android {
     namespace = "com.cazadoxs.descifra"
-    compileSdk = 36
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.cazadoxs.descifra"
