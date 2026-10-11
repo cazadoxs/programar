@@ -149,7 +149,7 @@ interface TransitDao {
     entities = [StopEntity::class, RouteEntity::class, ServiceEntity::class, HeadsignEntity::class, TripEntity::class,
         TimetableEntity::class, PatternEntity::class, FeedEntity::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = false,
 )
 abstract class TransitDb : RoomDatabase() {
     abstract fun dao(): TransitDao
@@ -241,7 +241,7 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE) suspend fun upsertBikes(b: List<BikeEntity>)
 }
 
-@Database(entities = [FavoriteEntity::class, AlertEntity::class, BikeEntity::class], version = 1, exportSchema = true)
+@Database(entities = [FavoriteEntity::class, AlertEntity::class, BikeEntity::class], version = 1, exportSchema = false)
 abstract class UserDb : RoomDatabase() {
     abstract fun dao(): UserDao
 
