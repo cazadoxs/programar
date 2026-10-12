@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Paper sheet with folded corner -->
+    <path android:fillColor="#F4EFE6" android:pathData="M32,26L64,26L78,40L78,80L32,80Z" />
+    <path android:fillColor="#D9CFBD" android:pathData="M64,26L78,40L64,40Z" />
+    <!-- Ciphered line becoming clear text -->
+    <path android:strokeColor="#8A94A8" android:strokeWidth="2.4" android:strokeLineCap="round" android:pathData="M40,46 q2.5,-4 5,0 t5,0 t5,0" />
+    <path android:strokeColor="#1B2A41" android:strokeWidth="2.6" android:strokeLineCap="round" android:pathData="M40,56L70,56" />
+    <path android:strokeColor="#1B2A41" android:strokeWidth="2.6" android:strokeLineCap="round" android:pathData="M40,64L62,64" />
+    <!-- Vermilion stamp -->
+    <path android:fillColor="#B8321F" android:pathData="M68,70m-13,0a13,13 0,1 1,26 0a13,13 0,1 1,-26 0" />
+    <path android:strokeColor="#F4EFE6" android:strokeWidth="1.6" android:fillColor="#00000000" android:pathData="M68,70m-10,0a10,10 0,1 1,20 0a10,10 0,1 1,-20 0" />
+    <path android:strokeColor="#F4EFE6" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round" android:fillColor="#00000000" android:pathData="M62.5,70.5L66.5,74.5L74,66" />
+</vector>

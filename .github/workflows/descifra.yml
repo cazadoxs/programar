@@ -1,0 +1,53 @@
+name: Descifra
+
+on:
+  push:
+    branches: [claude/descifra-re5xu9]
+    paths: ["apps/descifra/**", ".github/workflows/descifra.yml"]
+  pull_request:
+    paths: ["apps/descifra/**", ".github/workflows/descifra.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/descifra
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Accept Android SDK licences
+        run: yes | "$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager" --licenses > /dev/null || true
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Core unit tests
+        run: ./gradlew :core:test --no-daemon
+
+      - name: Build debug APK
+        run: ./gradlew :app:assembleDebug --no-daemon --stacktrace
+
+      - name: Lint
+        run: ./gradlew :app:lintDebug --no-daemon
+
+      - name: Build release bundle (R8 + resource shrinking, unsigned)
+        run: ./gradlew :app:bundleRelease --no-daemon
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: descifra-reports
+          path: |
+            apps/descifra/app/build/outputs/apk/debug/*.apk
+            apps/descifra/app/build/reports/lint-results-debug.html
+            apps/descifra/core/build/reports/tests
+          if-no-files-found: ignore
