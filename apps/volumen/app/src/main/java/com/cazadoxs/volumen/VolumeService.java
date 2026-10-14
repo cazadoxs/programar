@@ -100,11 +100,8 @@ public class VolumeService extends Service {
         IntentFilter filter = new IntentFilter();
         filter.addAction(AudioEffect.ACTION_OPEN_AUDIO_EFFECT_CONTROL_SESSION);
         filter.addAction(AudioEffect.ACTION_CLOSE_AUDIO_EFFECT_CONTROL_SESSION);
-        if (Build.VERSION.SDK_INT >= 33) {
-            registerReceiver(sessions, filter, Context.RECEIVER_EXPORTED);
-        } else {
-            registerReceiver(sessions, filter);
-        }
+        // Exported: the broadcasts come from other apps. Before Android 13 the flag is ignored.
+        registerReceiver(sessions, filter, Context.RECEIVER_EXPORTED);
         global = create(0);
         globalFailed = global == null;
     }
