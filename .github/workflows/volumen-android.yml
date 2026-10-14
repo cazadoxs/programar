@@ -1,0 +1,42 @@
+name: Volumen (Android)
+
+on:
+  push:
+    paths:
+      - "apps/volumen/**"
+      - ".github/workflows/volumen-android.yml"
+  pull_request:
+    paths:
+      - "apps/volumen/**"
+      - ".github/workflows/volumen-android.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/volumen
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Lint and build
+        run: ./gradlew --no-daemon :app:lintDebug :app:assembleDebug
+      - name: Lint errors
+        if: failure()
+        run: |
+          f=app/build/intermediates/lint_intermediate_text_report/debug/lintReportDebug/lint-results-debug.txt
+          [ -f "$f" ] && grep -B1 -A4 "Error:" "$f" | head -150 || true
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: volumen-apk
+          path: apps/volumen/app/build/outputs/apk/debug/*.apk
+          if-no-files-found: ignore
