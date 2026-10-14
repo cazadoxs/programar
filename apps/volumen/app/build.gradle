@@ -1,0 +1,34 @@
+plugins {
+    id("com.android.application")
+}
+
+android {
+    namespace = "com.cazadoxs.volumen"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "com.cazadoxs.volumen"
+        // DynamicsProcessing (the effect used to lower the volume) exists from Android 9.
+        minSdk = 28
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0.0"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled = false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+
+    // Platform SDK only: no third-party libraries, no network, no analytics.
+    lint {
+        abortOnError = true
+        disable += ["GradleDependency", "OldTargetApi"]
+    }
+}
