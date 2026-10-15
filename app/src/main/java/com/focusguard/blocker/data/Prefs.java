@@ -27,6 +27,14 @@ public class Prefs {
     private static final String KEY_STREAK = "streak_days";
 
     private static final String PREFIX_APP_ENABLED = "app_enabled_";
+    private static final String KEY_GUARDED_PKGS = "guarded_pkgs";
+    private static final String PREFIX_GUARD_MODE = "guard_mode_";
+    private static final String PREFIX_GUARD_ON = "guard_on_";
+
+    /** Block only the short-video / infinite feed surface of the app. */
+    public static final int MODE_FEED = 1;
+    /** Block the whole app: opening it sends the user straight home. */
+    public static final int MODE_WHOLE = 2;
 
     public static final long TAMPER_DELAY_MS = 15 * 60 * 1000L;
     public static final int DEFAULT_AVG_SECONDS = 34;
@@ -51,6 +59,48 @@ public class Prefs {
 
     public void setPlatformEnabled(Platform platform, boolean enabled) {
         sp.edit().putBoolean(PREFIX_APP_ENABLED + platform.storageKey, enabled).apply();
+    }
+
+    // --- Any-app guarding ---------------------------------------------------
+
+    public java.util.Set<String> getGuardedPackages() {
+        return new java.util.LinkedHashSet<>(sp.getStringSet(KEY_GUARDED_PKGS, new java.util.HashSet<String>()));
+    }
+
+    public void setGuard(String pkg, int mode) {
+        java.util.Set<String> set = getGuardedPackages();
+        set.add(pkg);
+        sp.edit().putStringSet(KEY_GUARDED_PKGS, set)
+                .putInt(PREFIX_GUARD_MODE + pkg, mode)
+                .putBoolean(PREFIX_GUARD_ON + pkg, true).apply();
+    }
+
+    public void removeGuard(String pkg) {
+        java.util.Set<String> set = getGuardedPackages();
+        set.remove(pkg);
+        sp.edit().putStringSet(KEY_GUARDED_PKGS, set)
+                .remove(PREFIX_GUARD_MODE + pkg).remove(PREFIX_GUARD_ON + pkg).apply();
+    }
+
+    /** 0 when the package is not guarded. */
+    public int getGuardMode(String pkg) {
+        return sp.getInt(PREFIX_GUARD_MODE + pkg, 0);
+    }
+
+    public boolean isGuardEnabled(String pkg) {
+        return sp.getBoolean(PREFIX_GUARD_ON + pkg, false);
+    }
+
+    public void setGuardEnabled(String pkg, boolean enabled) {
+        sp.edit().putBoolean(PREFIX_GUARD_ON + pkg, enabled).apply();
+    }
+
+    public void registerListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
+        sp.registerOnSharedPreferenceChangeListener(l);
+    }
+
+    public void unregisterListener(SharedPreferences.OnSharedPreferenceChangeListener l) {
+        sp.unregisterOnSharedPreferenceChangeListener(l);
     }
 
     public boolean isOverlayEnabled() {

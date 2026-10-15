@@ -20,6 +20,7 @@ import java.util.Locale;
 public class MainActivity extends android.app.Activity {
 
     private static final int REQ_PIN_DISABLE = 71;
+    private static final int REQ_PIN_GATE = 72;
 
     private Prefs prefs;
     private StatsRepository stats;
@@ -36,6 +37,8 @@ public class MainActivity extends android.app.Activity {
     private final TextView[] platformCounts = new TextView[Platform.values().length];
 
     private boolean suppressProtectionListener = false;
+    private android.widget.LinearLayout customList;
+    private Runnable pendingAfterPin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +60,9 @@ public class MainActivity extends android.app.Activity {
         protectionSwitch.setOnCheckedChangeListener(this::onProtectionSwitchChanged);
 
         buildPlatformRows();
+        customList = findViewById(R.id.customAppList);
+        findViewById(R.id.addAppButton).setOnClickListener(
+                v -> startActivity(new Intent(this, AppPickerActivity.class)));
 
         findViewById(R.id.navStats).setOnClickListener(v -> startActivity(new Intent(this, StatsActivity.class)));
         findViewById(R.id.navSettings).setOnClickListener(v -> startActivity(new Intent(this, SettingsActivity.class)));
@@ -91,6 +97,7 @@ public class MainActivity extends android.app.Activity {
         super.onResume();
         refreshProtectionCard();
         refreshStats();
+        buildCustomRows();
         if (com.focusguard.blocker.service.BlockerAccessibilityService.isRunning()) {
             prefs.touchStreakForToday();
         }
@@ -98,6 +105,78 @@ public class MainActivity extends android.app.Activity {
             platformCounts[i].setText(String.format(Locale.getDefault(), "%d",
                     stats.countForPlatformToday(Platform.values()[i])));
         }
+    }
+
+    private void buildCustomRows() {
+        customList.removeAllViews();
+        LayoutInflater inflater = LayoutInflater.from(this);
+        android.content.pm.PackageManager pm = getPackageManager();
+        for (String pkg : prefs.getGuardedPackages()) {
+            View row = inflater.inflate(R.layout.item_platform_row, customList, false);
+            ImageView icon = row.findViewById(R.id.rowIcon);
+            String label = pkg;
+            try {
+                icon.setBackground(null);
+                icon.setPadding(0, 0, 0, 0);
+                icon.setImageDrawable(pm.getApplicationIcon(pkg));
+                label = String.valueOf(pm.getApplicationLabel(pm.getApplicationInfo(pkg, 0)));
+            } catch (android.content.pm.PackageManager.NameNotFoundException e) {
+                icon.setImageResource(R.drawable.ic_lock); // app was uninstalled; keep the row so it can be removed
+            }
+            ((TextView) row.findViewById(R.id.rowTitle)).setText(label);
+            ((TextView) row.findViewById(R.id.rowDesc)).setText(prefs.getGuardMode(pkg) == Prefs.MODE_WHOLE
+                    ? R.string.custom_mode_whole : R.string.custom_mode_feed);
+            ((TextView) row.findViewById(R.id.rowCount)).setText(String.format(Locale.getDefault(), "%d",
+                    stats.countForPlatformToday(Platform.custom(pkg))));
+
+            Switch rowSwitch = row.findViewById(R.id.rowSwitch);
+            rowSwitch.setChecked(prefs.isGuardEnabled(pkg));
+            rowSwitch.setOnCheckedChangeListener((btn, checked) -> {
+                if (checked) {
+                    prefs.setGuardEnabled(pkg, true);
+                } else {
+                    btn.setChecked(true); // revert; only applied if the PIN gate (if any) passes
+                    gate(() -> {
+                        prefs.setGuardEnabled(pkg, false);
+                        buildCustomRows();
+                    });
+                }
+            });
+            final String title = label;
+            row.setOnClickListener(v -> showAppOptions(pkg, title));
+            customList.addView(row);
+        }
+    }
+
+    private void showAppOptions(String pkg, String title) {
+        String[] items = {getString(R.string.custom_mode_feed), getString(R.string.custom_mode_whole),
+                getString(R.string.custom_remove)};
+        new android.app.AlertDialog.Builder(this)
+                .setTitle(title)
+                .setItems(items, (d, which) -> {
+                    if (which == 2) {
+                        gate(() -> {
+                            prefs.removeGuard(pkg);
+                            buildCustomRows();
+                        });
+                    } else {
+                        prefs.setGuard(pkg, which == 0 ? Prefs.MODE_FEED : Prefs.MODE_WHOLE);
+                        buildCustomRows();
+                    }
+                })
+                .show();
+    }
+
+    /** Runs {@code action} now, or after the PIN check when a PIN is set (same friction as turning protection off). */
+    private void gate(Runnable action) {
+        if (!prefs.isPinEnabled()) {
+            action.run();
+            return;
+        }
+        pendingAfterPin = action;
+        Intent intent = new Intent(this, PinActivity.class);
+        intent.putExtra(PinActivity.EXTRA_MODE, PinActivity.MODE_DISABLE);
+        startActivityForResult(intent, REQ_PIN_GATE);
     }
 
     private void refreshProtectionCard() {
@@ -179,6 +258,11 @@ public class MainActivity extends android.app.Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQ_PIN_DISABLE && resultCode == RESULT_OK) {
             openAccessibilitySettings();
+        } else if (requestCode == REQ_PIN_GATE) {
+            Runnable r = pendingAfterPin;
+            pendingAfterPin = null;
+            if (resultCode == RESULT_OK && r != null) r.run();
+            buildCustomRows();
         }
     }
 }

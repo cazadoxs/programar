@@ -35,6 +35,8 @@ public final class Platform {
 
     private static final Platform[] VALUES = {YOUTUBE, INSTAGRAM, TIKTOK};
 
+    private static final java.util.Map<String, Platform> CUSTOM = new java.util.HashMap<>();
+
     public final String primaryPackage;
     public final int labelRes;
     public final int descRes;
@@ -42,8 +44,15 @@ public final class Platform {
     public final int colorRes;
     public final String storageKey;
     private final String[] packages;
+    public final boolean builtin;
 
     private Platform(String[] packages, int labelRes, int descRes, int iconRes, int colorRes, String storageKey) {
+        this(packages, labelRes, descRes, iconRes, colorRes, storageKey, true);
+    }
+
+    private Platform(String[] packages, int labelRes, int descRes, int iconRes, int colorRes, String storageKey,
+                     boolean builtin) {
+        this.builtin = builtin;
         this.packages = packages;
         this.primaryPackage = packages[0];
         this.labelRes = labelRes;
@@ -51,6 +60,17 @@ public final class Platform {
         this.iconRes = iconRes;
         this.colorRes = colorRes;
         this.storageKey = storageKey;
+    }
+
+    /** A user-chosen app (any package). Instances are cached so they can be used as map keys. */
+    public static synchronized Platform custom(String packageName) {
+        Platform p = CUSTOM.get(packageName);
+        if (p == null) {
+            p = new Platform(new String[]{packageName}, 0, 0, R.drawable.ic_lock, R.color.brand_primary,
+                    "app_" + packageName, false);
+            CUSTOM.put(packageName, p);
+        }
+        return p;
     }
 
     public static Platform[] values() {

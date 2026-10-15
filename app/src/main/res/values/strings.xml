@@ -104,4 +104,12 @@
     <string name="permission_grant">Conceder</string>
     <string name="permission_granted">Activo</string>
     <string name="back">Atrás</string>
+    <string name="custom_apps_title">Otras apps protegidas</string>
+    <string name="custom_add">+ Añadir otra app</string>
+    <string name="custom_mode_feed">Solo vídeos cortos / feed infinito</string>
+    <string name="custom_mode_whole">Bloquear la app entera</string>
+    <string name="custom_remove">Quitar de la lista</string>
+    <string name="custom_picker_title">Elige una app para proteger</string>
+    <string name="custom_search_hint">Buscar app…</string>
+    <string name="custom_pick_mode">¿Qué quieres bloquear?</string>
 </resources>
