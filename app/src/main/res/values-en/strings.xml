@@ -95,4 +95,12 @@
     <string name="permission_grant">Grant</string>
     <string name="permission_granted">Active</string>
     <string name="back">Back</string>
+    <string name="custom_apps_title">Other protected apps</string>
+    <string name="custom_add">+ Add another app</string>
+    <string name="custom_mode_feed">Short videos / infinite feed only</string>
+    <string name="custom_mode_whole">Block the whole app</string>
+    <string name="custom_remove">Remove from list</string>
+    <string name="custom_picker_title">Pick an app to protect</string>
+    <string name="custom_search_hint">Search apps…</string>
+    <string name="custom_pick_mode">What do you want to block?</string>
 </resources>
